@@ -31,20 +31,6 @@ type SensorData struct {
     MAC           string
 }
 
-//SensorFormat3 RuuviData
-type SensorFormat3 struct {
-	ManufacturerID      uint16
-	DataFormat          uint8
-	Humidity            uint8
-	Temperature         uint8
-	TemperatureFraction uint8
-	Pressure            uint16
-	AccelerationX       int16
-	AccelerationY       int16
-	AccelerationZ       int16
-	BatteryVoltageMv    uint16
-}
-
 type SensorFormat5 struct {
         ManufacturerID      uint16
         DataFormat          uint8
@@ -78,26 +64,6 @@ func parseTemperature(t uint8, f uint8) float64 {
 	return temp
 }
 
-func parseSensorFormat3(data []byte) *SensorData {
-	reader := bytes.NewReader(data)
-	result := SensorFormat3{}
-	sensorData := SensorData{}
-
-	err := binary.Read(reader, binary.BigEndian, &result)
-	if err != nil {
-	        log.Printf("ERROR: %s\n",err)
-		return &sensorData
-	}
-
-	sensorData.Temp = parseTemperature(result.Temperature, result.TemperatureFraction)
-	sensorData.Humidity = float64(result.Humidity) / 2.0
-	sensorData.Pressure = uint32(result.Pressure) + 50000
-	sensorData.Battery = result.BatteryVoltageMv
-	sensorData.AccelerationX = result.AccelerationX
-	sensorData.AccelerationY = result.AccelerationY
-	sensorData.AccelerationZ = result.AccelerationZ
-	return &sensorData
-}
 
 var mWait map[string]bool = make(map[string]bool)
 var mutex = &sync.Mutex{}
@@ -198,7 +164,7 @@ func ParseRuuviData(data []byte, a string) {
 			fmt.Printf("Ruuvi data with sensor format %d\n", sensorFormat)
 			switch sensorFormat {
 				case 3:
-					parseSensorFormat3(data)
+					fmt.Printf("RuuviTag version 3 not supported. Please upgrade RuuviTag to version 5.")
 				case 5:
 					parseSensorFormat5(data)
 				default:
