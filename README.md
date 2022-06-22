@@ -1,6 +1,8 @@
 # Ruuvi
 Saves ruuvi tag measurements to InfluxDB. You can use Graphana to view results from database. This code has been run on RaspberryPi. So it should work at least there.
 
+Application stores Temperature, Pressure, Humidity%. It will also calculate absolutely humidity and dew point. Those are also stored to DB.
+
 ## Building
 
 This should be compiled with go 1.15 or later
