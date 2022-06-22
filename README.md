@@ -1,5 +1,5 @@
 # Ruuvi
-Save ruuvi tag measurements to InfluxDB. You can use Graphana to view resukts from database.
+Saves ruuvi tag measurements to InfluxDB. You can use Graphana to view results from database.
 
 ## Building
 
@@ -17,4 +17,11 @@ This will create ruuvi binary.
 
 ## Executing
 
+Before executing setup config.yml. You need to name sensors and provide MAC address of those sensors which will be stored to db. Each device is stored in 15s interval. True interval is some where 15s-17s because Ruuvi Tag is sending every 2s measurements.
+
 It is expected that config.yml is in the same directory with binary.
+
+## DB
+
+Database name is weather. Presission is second.
+
