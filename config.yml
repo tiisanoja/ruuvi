@@ -1,0 +1,35 @@
+#Pressure correction so that it will match pressure on sealevel
+Pressure:
+  Correction: 1300
+
+#Location of InfluxDB
+Database:
+  ConnectionString: http://localhost:8086
+
+
+#
+#Data
+#
+
+#Common tag for all Ruuvitag sensors
+Address: "YourAddress"
+
+#List of Ruuvitag sensors to be stored to DB
+#If sensor is not on the list it won't be stored to DB
+#MAC addresses are without leading zero!
+Sensors: 
+    - "aa:1e:7b:f3:yy:z"
+    - "bb:e3:18:33:yy:xx"
+    - "cc:5a:86:8d:yy:xx"
+
+#Location tag for each Ruuvitag
+#Both MAC and Location tag can be used to separate each Ruuvitag sensors in DB
+
+"aa:e3:18:33:yy:z":
+  Location: "Outside"
+  
+"bb:1e:7b:f3:yy:xx":
+  Location: "Sauna"
+
+"cc:5a:86:8d:yy:xx":
+  Location: "Inside"
