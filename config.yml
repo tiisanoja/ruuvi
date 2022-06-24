@@ -1,4 +1,7 @@
-#Pressure correction so that it will match pressure on sealevel
+#Pressure correction so that it will match pressure on sealevel. 
+#Correction in Pa
+#If Correction is 0 then it is stored what is received from RuuviTag
+#Some idea can be taken from here: https://www.mide.com/air-pressure-at-altitude-calculator
 Pressure:
   Correction: 1300
 
@@ -16,16 +19,16 @@ Address: "YourAddress"
 
 #List of Ruuvitag sensors to be stored to DB
 #If sensor is not on the list it won't be stored to DB
-#MAC addresses are without leading zero!
+#MAC addresses are without leading zeros!
 Sensors: 
-    - "aa:1e:7b:f3:yy:z"
+    - "aa:1e:7b:f3:yy:1"
     - "bb:e3:18:33:yy:xx"
     - "cc:5a:86:8d:yy:xx"
 
 #Location tag for each Ruuvitag
 #Both MAC and Location tag can be used to separate each Ruuvitag sensors in DB
 
-"aa:e3:18:33:yy:z":
+"aa:e3:18:33:yy:1":
   Location: "Outside"
   
 "bb:1e:7b:f3:yy:xx":
