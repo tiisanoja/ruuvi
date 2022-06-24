@@ -1,7 +1,7 @@
 # Ruuvi
 Saves ruuvi tag measurements to InfluxDB. You can use Graphana to view results from database. This code has been run on RaspberryPi. So it should work at least there.
 
-Application stores Temperature, Pressure, Humidity%. It will also calculate absolutely humidity and dew point. Those are also stored to InfluxDB. Application listen only format RAWv2 / Data Format 5. Really old versions of RuuviTag might have still Data Format 3. There is also Data Format 8 which is encrypted version of data format. That is not supported right now. 
+Application stores Temperature (°C), Pressure (hPa), Humidity (%). It also calculates absolutely humidity (g/m2) and dew point (°C) and stores those to InfluxDB. Application listen only [RAWv2](https://docs.ruuvi.com/communication/bluetooth-advertisements/data-format-5-rawv2) format. Really old versions of RuuviTag might have still Data Format 3 which is not supported. There is also Data Format 8 which is encrypted version of data format. That is not supported right now. 
 
 ## Building
 
