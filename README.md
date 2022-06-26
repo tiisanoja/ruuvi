@@ -8,8 +8,8 @@ Application stores to InfluxDB:
 * Absolutely humidity (g/m2)
 * Dew point (°C)
 * Battery voltage (mV)
-* Transmit power (mG)
-* Acceleration (x,y,z) (dBm)
+* Transmit power (dBm)
+* Acceleration (x,y,z) (mG)
 
 Application listen only [RAWv2](https://docs.ruuvi.com/communication/bluetooth-advertisements/data-format-5-rawv2) format. Really old versions of RuuviTag might have still Data Format 3 which is not supported. There is also Data Format 8 which is encrypted version of data format. That is not supported right now. 
 
