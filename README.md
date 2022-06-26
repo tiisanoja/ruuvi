@@ -5,8 +5,8 @@ Application stores to InfluxDB:
 * Temperature (°C)
 * Pressure (hPa)
 * Humidity (%)
-* Absolutely humidity (g/m2)
-* Dew point (°C)
+* Absolutely humidity (g/m2) -calculated value
+* Dew point (°C) -calculated value
 * Battery voltage (mV)
 * Transmit power (dBm)
 * Acceleration (x,y,z) (mG)
