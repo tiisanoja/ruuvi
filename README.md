@@ -1,5 +1,5 @@
 # Ruuvi
-Project provide applicatio to store RuuviTag measurements to InfluxDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
+Project provides application to store RuuviTag measurements to InfluxDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
 
 Following values are stored to database. Stored values are mainly taken from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
 
