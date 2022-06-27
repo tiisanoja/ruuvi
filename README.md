@@ -1,7 +1,7 @@
 # Ruuvi
-Saves ruuvi tag measurements to InfluxDB. You can use Graphana to view results from database. This code has been run on RaspberryPi. So it should work at least there.
+Project provide applicatio to store RuuviTag measurements to InfluxDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
 
-Next values are stored to database. There are values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
+Following values are stored to database. Stored values are mainly taken from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
 
 ### Weather
 * Temperature (°C)
@@ -35,7 +35,7 @@ This will create ruuvi binary.
 
 ## Executing
 
-Before executing setup config.yml. You need to give name for sensors and provide MAC address of those sensors. Only those sensors are stored to db which MAC address is provided in config.yml. Each device is stored in 15s interval. True interval is some where 15s-17s because Ruuvi Tag is sending every 2s measurements.
+Before executing binary setup config.yml. Provide URL for InfluxDB. You need also to give name for sensors and provide MAC address. Only those sensors are stored to db which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval. True interval is some where 15s-17s because Ruuvi Tag is sending every 2s measurements.
 
 It is expected that config.yml is in the same directory with binary.
 
