@@ -17,6 +17,7 @@ var scanMutex = sync.Mutex{}
 
 /*TODO: To be moved*/
 var PressureCorrection = 0
+var StoreDelay = 15 * time.Second
 var ConnectionString = ""
 var Address = "Home"
 var aSensors []string 
@@ -73,10 +74,12 @@ func main() {
 	viper.SetDefault("Pressure.Correction", 0)
         viper.SetDefault("Database.ConnectionString","http://localhost:8086")
 	viper.SetDefault("Address","Home")
+	viper.SetDefault("Measurements.StoreDelay",15)
 
         PressureCorrection = viper.GetInt("Pressure.Correction")
         ConnectionString = viper.GetString("Database.ConnectionString")
 	Address = viper.GetString("Address")
+	StoreDelay = time.Duration(viper.GetInt("Measurements.StoreDelay")) * time.Second
 
         log.Printf("Pressure correction: %d\n",viper.GetInt("Pressure.Correction"))
         log.Printf("Database connection: %s\n", viper.GetString("Database.ConnectionString"))

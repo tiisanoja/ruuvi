@@ -9,6 +9,11 @@ Pressure:
 Database:
   ConnectionString: http://localhost:8086
 
+#Storing interval in seconds
+#Default is store next measurement after 15s send by the same RuuviTag sensors
+#Set to 0 to store all measurements
+Measurements:
+  StoreDelay: 15
 
 #
 #Data
