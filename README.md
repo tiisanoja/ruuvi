@@ -41,5 +41,5 @@ It is expected that config.yml is in the same directory with binary.
 
 ## DB
 
-Database name is weather. Presission is second.
+Ruuvi application stores data to database named *weather*. Used presission to store measurements is a second. Currently only InfluxDB 1.X is supported.
 
