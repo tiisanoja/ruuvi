@@ -41,5 +41,5 @@ Config.yml needs to be in the same directory with binary.
 
 ## DB
 
-Application stores data to database named *weather*. Used presission to store measurements is a second. Currently only InfluxDB 1.X is supported.
+Data is stored to InfluxDB. Currently supported version is 1.x. Application stores data to database named *weather*. Used presission to store measurements is a second.
 
