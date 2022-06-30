@@ -35,7 +35,7 @@ This will create ruuvi binary.
 
 ## Executing
 
-Before executing binary setup config.yml. Provide URL for InfluxDB. You need also to give name for sensors and provide MAC address. Only those sensors are stored to db which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval. True interval is some where 15s-17s because Ruuvi Tag is sending every 2s measurements.
+Before executing binary setup config.yml. Provide URL for InfluxDB. You need also to give name for sensors and provide MAC address. Only those sensors are stored to db which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval by defaul. True interval is some where 15s-17s because Ruuvi Tag is sending every 2s measurements. In config.yml you can specify interval if something else is needed.
 
 Config.yml needs to be in the same directory with binary.
 
