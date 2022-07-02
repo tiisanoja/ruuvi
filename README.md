@@ -21,21 +21,19 @@ Application listen only [RAWv2](https://docs.ruuvi.com/communication/bluetooth-a
 
 ## Building
 
-This should be compiled with go 1.15 or later
-Set env variable  GO111MODULE so that golang uses correct version of modules
-export GO111MODULE=on
+Building requires module support from golang. Building has been tested to work fine with golang version 1.15 and 1.18. Building requires that you have installed make and golang. You might need to change Makefile to specify where go binary can be found.
 
-You need to have installed golang and make to be able to compile. First you need to add dependencies and only after that build application.
-Steps:
-1. make env
-2. make build
+Building:
+1. make 
 
-This will create ruuvi binary.
+This will create ruuvi binary to directory ../../bin.
 
 
 ## Executing
 
-Before executing binary setup config.yml. Provide URL for InfluxDB. You need also to give name for sensors and provide MAC address. Only those sensors are stored to db which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval by defaul. True interval is some where 15s-17s because RuuviTag is sending every 2s measurements. In config.yml you can specify interval if something else is needed.
+Before executing binary setup config.yml. Provide URL for InfluxDB. You need also to give name for sensors and provide MAC address. Only those sensors are stored to db which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval by default. True interval is bit more because RuuviTag is sending measurements between 1-3s depending on configuration and firmware installed to RuuviTag. In config.yml you can specify interval if something else is needed.
+
+There is startRuuvi.sh which can be used at least on RaspberryPi to start application. It will trun green led on when application is runnig. You can comment that part from the script if you do not want that functionality.
 
 Config.yml needs to be in the same directory with binary.
 
