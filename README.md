@@ -29,13 +29,15 @@ Building:
 This will create ruuvi binary to directory ../../bin.
 
 
-## Executing
+## Running
 
 Before executing binary setup config.yml. Provide URL for InfluxDB. You need also to give name for sensors and provide MAC address. Only those sensors are stored to db which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval by default. True interval is bit more because RuuviTag is sending measurements between 1-3s depending on configuration and firmware installed to RuuviTag. In config.yml you can specify interval if something else is needed.
 
 There is startRuuvi.sh which can be used at least on RaspberryPi to start application. It will trun green led on when application is runnig. You can comment that part from the script if you do not want that functionality.
 
 Config.yml needs to be in the same directory with binary.
+
+Some kind of log is now generated to /var/log/ruuvi directory. It will use starting day as part of the log file name. Logs do not rollover execpt if you start application daily.
 
 ## DB
 
