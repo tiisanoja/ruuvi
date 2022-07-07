@@ -39,7 +39,7 @@ Config.yml needs to be in the same directory with binary.
 
 ### Example
 1. mkdir -p /opt/ruuvi
-2. Copy config.yml, ruuvi and startRuuvi.sh to /opt/ruuv directory
+2. Copy config.yml, ruuvi and startRuuvi.sh to /opt/ruuvi directory
 3. cd /opt/ruuvi
 4. ./startRuuvi.sh
 
