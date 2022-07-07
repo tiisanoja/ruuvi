@@ -37,6 +37,12 @@ There is startRuuvi.sh which can be used at least on RaspberryPi to start applic
 
 Config.yml needs to be in the same directory with binary.
 
+### Example
+1. mkdir -p /opt/ruuvi
+2. Copy config.yml, ruuvi and startRuuvi.sh to /opt/ruuv directory
+3. cd /opt/ruuvi
+4. ./startRuuvi.sh
+
 Some kind of log is generated to /var/log/ruuvi directory. It will use starting day as part of the log file name (ruuvi.<date in form of YYYYMMDD>.log). Logs do not rollover execpt if you start application daily.
 
 ## DB
