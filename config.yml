@@ -8,6 +8,15 @@ Pressure:
 #Location of InfluxDB
 Database:
   ConnectionString: http://localhost:8086
+  #Org: my-org
+
+  #Token is username/password for InfluxDB 1.8
+  #Token: <username/password>
+  #If no username / password combination is set then empty string should be used
+  #Token:
+
+  #InfluxDB 2.X have own token value which needs to be used
+  #Token: <Token set in DB>
 
 #Storing interval in seconds
 #Default is store next measurement after 15s send by the same RuuviTag sensors
