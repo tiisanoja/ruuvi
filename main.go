@@ -23,6 +23,7 @@ var aSensors []string
 var aLocations []string
 var DBToken = ""
 var DBOrg = ""
+var DBBucket = ""
 
 func beginScan(d gatt.Device) {
     scanMutex.Lock()
@@ -78,6 +79,7 @@ func main() {
     viper.SetDefault("Measurements.StoreDelay", 15)
     viper.SetDefault("Database.Token", "")
     viper.SetDefault("Database.Org","")
+    viper.SetDefault("Database.Bucket","weather")
 
     PressureCorrection = viper.GetInt("Pressure.Correction")
     ConnectionString = viper.GetString("Database.ConnectionString")
@@ -85,6 +87,8 @@ func main() {
     StoreDelay = time.Duration(viper.GetInt("Measurements.StoreDelay")) * time.Second
     DBToken = viper.GetString("Database.Token")
     DBOrg = viper.GetString("Database.Org")
+    DBBucket = viper.GetString("Database.Bucket")
+
 
     log.Printf("Pressure correction: %d\n", viper.GetInt("Pressure.Correction"))
     log.Printf("Database connection: %s\n", viper.GetString("Database.ConnectionString"))

@@ -18,6 +18,8 @@ Database:
   #InfluxDB 2.X have own token value which needs to be used
   #Token: <Token set in DB>
 
+  Bucket: weather
+
 #Storing interval in seconds
 #Default is store next measurement after 15s send by the same RuuviTag sensors
 #Set to 0 to store all measurements

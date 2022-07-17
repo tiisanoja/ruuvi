@@ -9,7 +9,6 @@ import (
 
 const (
     // Specifies name of bucket where data is stored
-    MyBucket = "weather"
     DBERROR  = "DB Error: "
 )
 
@@ -21,7 +20,7 @@ func Insert(measurement map[string]interface{}, MAC string) {
     defer c.Close()
 
     // user blocking write client for writes to desired bucket
-    writeAPI := c.WriteAPI(DBOrg, MyBucket)
+    writeAPI := c.WriteAPI(DBOrg, DBBucket)
 
     // Get errors channel
     errorsCh := writeAPI.Errors()
@@ -65,11 +64,11 @@ func Insert(measurement map[string]interface{}, MAC string) {
 //Uses Hardware table
 func InsertHW(measurement map[string]interface{}, MAC string) {
     // Create client and set batch size to 2
-    c := influxdb2.NewClientWithOptions(ConnectionString, "my-token", influxdb2.DefaultOptions().SetBatchSize(2))
+    c := influxdb2.NewClientWithOptions(ConnectionString, DBToken, influxdb2.DefaultOptions().SetBatchSize(2))
     defer c.Close()
 
     // user blocking write client for writes to desired bucket
-    writeAPI := c.WriteAPI("my-org", MyBucket)
+    writeAPI := c.WriteAPI(DBOrg, DBBucket)
 
     // Create a point and add to batch
     tags := map[string]string{"Address": Address}
