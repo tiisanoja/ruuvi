@@ -122,13 +122,13 @@ func parseSensorFormat5(data []byte) *SensorData {
     }
 
     measurement["Dewpoint"] = tDewpoint
-    measurement["Pressure"] = sensorData.Pressure
+    measurement["Pressure"] = int(sensorData.Pressure)
 
     Insert(measurement, sensorData.MAC)
 
     HWmeasurement := make(map[string]interface{})
-    HWmeasurement["Battery"] = sensorData.Battery
-    HWmeasurement["TxPower"] = sensorData.TXPower
+    HWmeasurement["Battery"] = int(sensorData.Battery)
+    HWmeasurement["TxPower"] = int(sensorData.TXPower)
 
     InsertHW(HWmeasurement, sensorData.MAC)
 
