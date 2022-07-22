@@ -10,8 +10,8 @@ Database:
   ConnectionString: http://localhost:8086
   #Org: my-org
 
-  #Token is username/password for InfluxDB 1.8
-  #Token: <username/password>
+  #Token is username:password for InfluxDB 1.8
+  #Token: <username>:<password>
   #If no username / password combination is set then empty string should be used
   #Token:
 
