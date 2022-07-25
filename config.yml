@@ -8,6 +8,30 @@ Pressure:
 #Location of InfluxDB
 Database:
   ConnectionString: http://localhost:8086
+  
+  #
+  # InfluxDB 2.X
+  #
+  # Change these to match your DB configuration
+  #
+  Org: Org-name
+  #Token needs to have write permission to bucket
+  Token: Users_token
+  Bucket: weather
+
+  #
+  #InfluxDB 1.8
+  #
+  ####
+  #### Comment all rows under InfluxDB 2.x if you are using InfluxDB 1.8 ####
+  ####
+  #
+  #If database does not have authetication keep Token commented
+  #Otherwise uncomment next row and provide username and password to use for authetication
+  #Token: <username>:<password>
+  #
+  #Bucket has database name to store measurements, uncomment for InfluxDB1,8
+  #Bucket: weather
 
 #Storing interval in seconds
 #Default is store next measurement after 15s send by the same RuuviTag sensors

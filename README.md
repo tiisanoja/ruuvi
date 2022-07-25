@@ -31,7 +31,7 @@ This will create ruuvi binary to directory ../../bin.
 
 ## Running
 
-Before running the binary, setup config.yml. Provide at least URL for InfluxDB. You need also to give name for sensors and provide MAC addresses of RuuviTags. Only those sensors are stored to the database which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval by default to save some disk space. True interval is bit more because RuuviTag is sending measurements between 1-3s depending on configuration and firmware installed to RuuviTag. In config.yml you can specify storing interval if something else than 15s is needed.
+Before running the binary, setup config.yml. Provide database settings for InfluxDB. In config.yml there are examples for InfluxDB 1.8 and 2.x. Please note that those two versions are configured totally different way. You need also to give name for sensors and provide MAC addresses of RuuviTags. Only those sensors are stored to the database which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval by default to save some disk space. True interval is bit more because RuuviTag is sending measurements between 1-3s depending on configuration and firmware installed to RuuviTag. In config.yml you can specify storing interval if something else than 15s is needed.
 
 There is startRuuvi.sh which can be used at least on RaspberryPi to start application. It will trun green led on when application is runnig. You can comment that part from the script if you do not want that functionality.
 
@@ -43,9 +43,9 @@ Config.yml needs to be in the same directory with binary.
 3. cd /opt/ruuvi
 4. ./startRuuvi.sh
 
-Some kind of log is generated to /var/log/ruuvi directory. It will use starting day as part of the log file name (ruuvi.<date in form of YYYYMMDD>.log). Logs do not rollover execpt if you start application daily.
+Error log is generated to /var/log/ruuvi directory. It will use starting day as part of the log file name (ruuvi.<date in form of YYYYMMDD>.log). Logs do not rollover execpt if you start application daily.
 
 ## DB
 
-Data is stored to InfluxDB. Currently supported version is 1.x. Application stores data to database named *weather*. Used presission to store measurements is a second.
+Data is stored to InfluxDB. Supported version are 1.8 and 2.x. Application stores data to bucket which is configured in config.yml. Default bucket is *weather*. Used presission to store measurements is a second.
 
