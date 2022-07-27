@@ -46,7 +46,7 @@ func Insert(measurement map[string]interface{}, MAC string) {
     /*Check if MAC was found from the list to be stored to DB*/
     if bFound == false {
         /*Not found. not storing*/
-        log.Printf("%s Ruuvitag is not stored to DB.\n", MAC)
+        log.Printf("%s Ruuvitag is not listed in config.yml to be stored to database.\n", MAC)
         return
     }
 
@@ -85,7 +85,7 @@ func InsertHW(measurement map[string]interface{}, MAC string) {
     /*Check if MAC was found from the list to be stored to DB*/
     if bFound == false {
         /*Not found, not storing*/
-        log.Printf("%s Ruuvitag is not stored to DB.\n", MAC)
+        log.Printf("%s Ruuvitag is not listed in config.yml to be stored to database.\n", MAC)
         return
     }
 
