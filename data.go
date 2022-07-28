@@ -77,11 +77,11 @@ func parseSensorFormat5(data []byte) (error, SensorData)  {
     reader := bytes.NewReader(data)
     result := SensorFormat5{}
     sensorData := SensorData{}
-	
+
     err := binary.Read(reader, binary.BigEndian, &result)
     if err != nil {
         log.Printf("ERROR: %s\n", err)
-        return err, sensorData 
+        return err, sensorData
     }
 
     sensorData.Temp = float64(result.Temperature) * 0.005
@@ -98,7 +98,7 @@ func parseSensorFormat5(data []byte) (error, SensorData)  {
     sensorData.MAC = fmt.Sprintf("%x:%x:%x:%x:%x:%x", result.MAC1, result.MAC2, result.MAC3, result.MAC4, result.MAC5, result.MAC6)
 
     //Calculate values
-    sensorData.AbsHumidity = calculateAbsHumidity(sensorData.Temp, sensorData.Humidity)	
+    sensorData.AbsHumidity = calculateAbsHumidity(sensorData.Temp, sensorData.Humidity)
     sensorData.DewPoint = calculateDewPoint(sensorData.Temp, sensorData.Humidity)
 
     return err, sensorData
@@ -170,7 +170,7 @@ func lockSensor( MAC string) bool{
 }
 
 //Release lock from the sensor
-func releaseSensor ( MAC string ) {
+func releaseSensor ( MAC string ) bool {
     //Let's not store all measurements per device
     if StoreDelay > 0 {
         time.Sleep(StoreDelay)
@@ -180,7 +180,7 @@ func releaseSensor ( MAC string ) {
     mWait[MAC] = false
     mutex.Unlock()
 
-    return
+    return true
 }
 
 //ParseRuuviData parses raw ruuvidata received from RuuviTag
@@ -194,12 +194,12 @@ func ParseRuuviData(data []byte, a string) {
             case 3:
                 log.Printf("RuuviTag version 3 not supported. Please upgrade RuuviTag to version 5.")
             case 5:
-		err, sensorData := parseSensorFormat5(data)
+                err, sensorData := parseSensorFormat5(data)
                 if err == nil {
                     if lockSensor(sensorData.MAC) == false {
                         return
                     }
-			
+
                     log.Printf("Seq: %d, Temp: %f, Pres: %d, Hum: %f, Battery: %d, TXPower: %d, MAC: %s\n",
                         sensorData.Seq,
                         sensorData.Temp,
