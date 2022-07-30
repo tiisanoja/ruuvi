@@ -118,3 +118,49 @@ func TestLockingLogic(t *testing.T){
     }
 }
 
+func TestRawData(t *testing.T){
+    data := []byte{0x04, 0x99, 0x05, 0x12, 0xFC, 0x53, 0x94, 0xC3, 0x7C, 0x00, 0x04, 0xFF, 0xFC, 0x04, 0x0C, 0xAC, 0x36, 0x42, 0x00, 0xCD, 0xCB, 0xB8, 0x33, 0x4C, 0x88, 0x4F}
+
+    err, sensorData := parseSensorFormat5(data)
+    if err == nil {
+       Temp := 24.3
+       Humidity := 53.49
+       Pressure := uint32(100044)
+       TXPower := int16(4)
+       Battery := uint16(2977)
+       MAC := "cb:b8:33:4c:88:4f"
+
+       //Verify Temperature
+       if sensorData.Temp != Temp {
+            t.Error("SensorData is having incorrect Temperature.")
+       }
+
+       //Verify Humidity
+       if sensorData.Humidity!= Humidity {
+            t.Error("SensorData is having incorrect Humidity.")
+       }
+
+       //Verify Pressure
+       if sensorData.Pressure != Pressure {
+            t.Errorf("SensorData is having incorrect Pressure. Expected: %v Got: %v",Pressure, sensorData.Pressure)
+       }
+
+       //Verify Transmit Power
+       if sensorData.TXPower != TXPower {
+            t.Error("SensorData is having incorrect Transmit Power.")
+       }
+
+       //Verify Voltage
+       if sensorData.Battery != Battery {
+            t.Error("SensorData is having incorrect Voltage.")
+       }
+
+       //Verify MAC
+       if sensorData.MAC != MAC {
+            t.Errorf("SensorData is having incorrect MAC. Expected: %s Got: %s", MAC, sensorData.MAC)
+       }
+
+    } else {
+        t.Errorf("Sample data parsing failed. Error: %s",err)
+    }
+}
