@@ -15,6 +15,22 @@ var (
     httpURL = os.Getenv("HTTP_URL")
 )
 
+type ValidDataDef struct {
+    Temp       bool
+    Humidity   bool
+    Pressure   bool
+    Battery    bool
+    Address    bool
+    AccelerationX bool
+    AccelerationY bool
+    AccelerationZ bool
+    TimeStamp  bool
+    Seq        bool
+    TXPower    bool
+    MAC        bool
+}
+
+
 //SensorData to be posted
 type SensorData struct {
     Temp          float64
@@ -35,6 +51,9 @@ type SensorData struct {
    //Absolutely Humidity
    AbsHumidity    float64
    DewPoint       float64
+
+   //Struct to mark if read data is invalid
+   ValidData    ValidDataDef
 }
 
 type SensorFormat5 struct {
@@ -101,8 +120,100 @@ func parseSensorFormat5(data []byte) (error, SensorData)  {
     sensorData.AbsHumidity = calculateAbsHumidity(sensorData.Temp, sensorData.Humidity)
     sensorData.DewPoint = calculateDewPoint(sensorData.Temp, sensorData.Humidity)
 
+    sensorData = checkNAN(sensorData)
+
     return err, sensorData
 
+}
+
+//Check if RuuviTag returns error value (Not a Number - NAN) 
+func checkNAN(sensorData SensorData) SensorData {
+    //Error values (NAN)
+    TempNAN := -163.84
+    HumidityNAN := 163.8375
+    PressureNAN := uint32(115535)
+    TXPowerNAN := int16(22)
+    BatteryNAN := uint16(3647)
+    SeqNAN := uint16(65535)
+    AccelerationXNAN := int16(-32768)
+    AccelerationYNAN := int16(-32768)
+    AccelerationZNAN := int16(-32768)
+
+    sensorData.ValidData.MAC = true
+
+    //Check if Temperature is having Error value
+    if sensorData.Temp == TempNAN {
+        sensorData.ValidData.Temp = false
+        log.Printf("ERROR: RuuviTag's %s temperature is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.Temp = true
+    }
+
+    //Check if humidity is having Error value
+    if sensorData.Humidity == HumidityNAN {
+        sensorData.ValidData.Humidity = false
+        log.Printf("ERROR: RuuviTag's %s humidity is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.Humidity = true
+    }
+
+    //Check if pressure is having Error value
+    if sensorData.Pressure == PressureNAN {
+        sensorData.ValidData.Pressure = false
+        log.Printf("ERROR: RuuviTag's %s pressure is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.Pressure = true
+    }
+
+    //Check if Transmit Power is having Error value
+    if sensorData.TXPower == TXPowerNAN {
+        sensorData.ValidData.TXPower = false
+        log.Printf("ERROR: RuuviTag's %s transmit power is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.TXPower = true
+    }
+
+    //Check if battery is having Error value
+    if sensorData.Battery == BatteryNAN {
+        sensorData.ValidData.Battery = false
+        log.Printf("ERROR: RuuviTag's %s battery voltage is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.Battery = true
+    }
+
+    //Check if sequence is having Error value
+    if sensorData.Seq == SeqNAN {
+        sensorData.ValidData.Seq = false
+        log.Printf("ERROR: RuuviTag's %s sequence is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.Seq = true
+    }
+
+    //Check if AccelerationX is having Error value
+    if sensorData.AccelerationX == AccelerationXNAN {
+        sensorData.ValidData.AccelerationX = false
+        log.Printf("ERROR: RuuviTag's %s accelerationX is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.AccelerationX = true
+    }
+
+    //Check if AccelerationY is having Error value
+    if sensorData.AccelerationY == AccelerationYNAN {
+        sensorData.ValidData.AccelerationY = false
+        log.Printf("ERROR: RuuviTag's %s accelerationY is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.AccelerationY = true
+    }
+
+    //Check if acclerationZ is having Error value
+    if sensorData.AccelerationZ == AccelerationZNAN {
+        sensorData.ValidData.AccelerationZ = false
+        log.Printf("ERROR: RuuviTag's %s accelerationZ is having errornous value\n", sensorData.MAC)
+    } else {
+        sensorData.ValidData.AccelerationZ = true
+    }
+
+    return sensorData
 }
 
 //Calculates absolutely humidity based on temperature and humidity%
@@ -126,33 +237,6 @@ func calculateDewPoint(temp float64, humidity float64) float64 {
     return tDewpoint
 }
 
-
-func storeMeasurement(sensorData SensorData) {
-    measurement := make(map[string]interface{})
-
-    measurement["Temperature"] = sensorData.Temp
-
-    //Sometimes Humidity is reported incorrectly
-    //Let's not store it if it is way too high number
-    if sensorData.Humidity < 150.0 {
-        measurement["Humidity"] = sensorData.Humidity
-    }
-
-    measurement["AbsoluteHumidity"] = sensorData.AbsHumidity
-    measurement["Dewpoint"] = sensorData.DewPoint
-    measurement["Pressure"] = int(sensorData.Pressure)
-
-    Insert(measurement, sensorData.MAC)
-}
-
-func storeHWmeasurement(sensorData SensorData) {
-    HWmeasurement := make(map[string]interface{})
-
-    HWmeasurement["Battery"] = int(sensorData.Battery)
-    HWmeasurement["TxPower"] = int(sensorData.TXPower)
-
-    InsertHW(HWmeasurement, sensorData.MAC)
-}
 
 //Tries to lock RuuviTag sensor
 //If MAC address is already locked returns false
@@ -194,6 +278,7 @@ func ParseRuuviData(data []byte, a string) {
             case 3:
                 log.Printf("RuuviTag version 3 not supported. Please upgrade RuuviTag to version 5.")
             case 5:
+                log.Printf("Data: %v\n", data);
                 err, sensorData := parseSensorFormat5(data)
                 if err == nil {
                     if lockSensor(sensorData.MAC) == false {
@@ -209,8 +294,8 @@ func ParseRuuviData(data []byte, a string) {
                         sensorData.TXPower,
                         sensorData.MAC)
 
-                    storeMeasurement(sensorData)
-                    storeHWmeasurement(sensorData)
+                    StoreMeasurement(sensorData)
+                    StoreHWmeasurement(sensorData)
                     releaseSensor(sensorData.MAC)
                 }
             case 8:
