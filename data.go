@@ -278,7 +278,6 @@ func ParseRuuviData(data []byte, a string) {
             case 3:
                 log.Printf("RuuviTag version 3 not supported. Please upgrade RuuviTag to version 5.")
             case 5:
-                log.Printf("Data: %v\n", data);
                 err, sensorData := parseSensorFormat5(data)
                 if err == nil {
                     if lockSensor(sensorData.MAC) == false {
