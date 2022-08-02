@@ -12,9 +12,57 @@ const (
     DBERROR  = "DB Error: "
 )
 
+func StoreMeasurement(sensorData SensorData) {
+    measurement := make(map[string]interface{})
+
+    //Store only valid values
+    if sensorData.ValidData.Temp == true {
+        measurement["Temperature"] = sensorData.Temp
+    }
+
+    //Sometimes Humidity is reported incorrectly
+    //Let's not store it if it is way too high number
+    if sensorData.Humidity < 150.0 && sensorData.ValidData.Humidity == true {
+        measurement["Humidity"] = sensorData.Humidity
+    }
+
+    //Store only valid values
+    if sensorData.ValidData.Pressure == true {
+        measurement["Pressure"] = int(sensorData.Pressure)
+    }
+
+    if sensorData.ValidData.Temp == true && sensorData.ValidData.Humidity == true {
+        measurement["AbsoluteHumidity"] = sensorData.AbsHumidity
+    }
+
+    if sensorData.ValidData.Temp == true && sensorData.ValidData.Humidity == true {
+        measurement["Dewpoint"] = sensorData.DewPoint
+    }
+
+    insert(measurement, sensorData.MAC)
+}
+
+func StoreHWmeasurement(sensorData SensorData) {
+    HWmeasurement := make(map[string]interface{})
+
+    if sensorData.ValidData.Battery == true {
+        HWmeasurement["Battery"] = int(sensorData.Battery)
+    }
+
+    if sensorData.ValidData.TXPower == true {
+        HWmeasurement["TxPower"] = int(sensorData.TXPower)
+    }
+
+    insertHW(HWmeasurement, sensorData.MAC)
+}
+
+//
+// 
+//
+
 // Insert points to database
 // Uses: Measurement table
-func Insert(measurement map[string]interface{}, MAC string) {
+func insert(measurement map[string]interface{}, MAC string) {
     // Create client and set batch size to 2
     c := influxdb2.NewClientWithOptions(ConnectionString, DBToken, influxdb2.DefaultOptions().SetBatchSize(2))
     defer c.Close()
@@ -46,7 +94,7 @@ func Insert(measurement map[string]interface{}, MAC string) {
     /*Check if MAC was found from the list to be stored to DB*/
     if bFound == false {
         /*Not found. not storing*/
-        log.Printf("%s Ruuvitag is not stored to DB.\n", MAC)
+        log.Printf("%s Ruuvitag is not listed in config.yml to be stored to database.\n", MAC)
         return
     }
 
@@ -62,7 +110,7 @@ func Insert(measurement map[string]interface{}, MAC string) {
 
 // Insert points to database
 //Uses Hardware table
-func InsertHW(measurement map[string]interface{}, MAC string) {
+func insertHW(measurement map[string]interface{}, MAC string) {
     // Create client and set batch size to 2
     c := influxdb2.NewClientWithOptions(ConnectionString, DBToken, influxdb2.DefaultOptions().SetBatchSize(2))
     defer c.Close()
@@ -85,7 +133,7 @@ func InsertHW(measurement map[string]interface{}, MAC string) {
     /*Check if MAC was found from the list to be stored to DB*/
     if bFound == false {
         /*Not found, not storing*/
-        log.Printf("%s Ruuvitag is not stored to DB.\n", MAC)
+        log.Printf("%s Ruuvitag is not listed in config.yml to be stored to database.\n", MAC)
         return
     }
 
