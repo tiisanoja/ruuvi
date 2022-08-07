@@ -1,14 +1,21 @@
 # Ruuvi
 Project provides application to store RuuviTag measurements to InfluxDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
 
-Following values are stored to database. Stored values are mainly taken from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
+Following values are stored to database. Stored values are mainly taken message sent from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
 
 ### Weather
 * Temperature (°C)
 * Pressure (hPa)
 * Humidity (%)
-* Absolutely humidity (g/m2) **`Calculated`**
-* Dew point (°C) **`Calculated`**
+* Absolutely humidity (g/m2) **`Calculated`** See Note 1.
+* Dew point (°C) **`Calculated`** See Note 2.
+
+Note 1: http://www.finwx.net/forum/index.php?topic=390.0
+
+Note 2: Dew point is calculated using formula found in https://en.wikipedia.org/wiki/Dew_point. A well-known approximation formula is used to calculate the dew point. Formula can be found below "Calculating the dew point".
+b and c values used in the formula are:  b = 17.62, c = 243.12°C
+Result is approximation. Amount of error is unclear because it is at least mixture of usage well-known approximation formula and these b and c values has some error depending on the measured temperature. More details can be found from: https://en.wikipedia.org/wiki/Dew_point
+
 
 ### Movement
 * Acceleration (x,y,z) (mG)
@@ -17,16 +24,16 @@ Following values are stored to database. Stored values are mainly taken from sen
 * Battery voltage (mV)
 * Transmit power (dBm)
 
-Application listen only [RAWv2](https://docs.ruuvi.com/communication/bluetooth-advertisements/data-format-5-rawv2) format. Really old versions of RuuviTag might have still Data Format 3 which is not supported. There is also Data Format 8 which is encrypted version of data format. That is not supported right now. 
+Application listen only [RAWv2](https://docs.ruuvi.com/communication/bluetooth-advertisements/data-format-5-rawv2) format. Really old versions of RuuviTag might have still Data Format 3 which is not supported. There is also Data Format 8 which is encrypted version of data format. That is not supported right now.
 
 ## Building
 
-Building requires module support from golang. Building has been tested to work fine with golang version 1.15 and 1.18. Building requires that you have installed make and golang. You might need to change Makefile to specify where go binary can be found.
+Building requires module support from golang. Building requires at least golang version 1.17. Building requires that you have installed make and golang. You might need to change Makefile to specify where go binary can be found.
 
 Building:
-1. make 
+1. make
 
-This will create ruuvi binary to directory ../../bin.
+This will first run unit tests and then create ruuvi binary to directory ../../bin. If unit tests are not passed, binary is not created.
 
 
 ## Running

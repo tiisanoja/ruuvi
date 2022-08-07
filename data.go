@@ -223,16 +223,33 @@ func calculateAbsHumidity(temp float64, humidity float64) float64 {
     return absHumidity
 }
 
-//Calculates dew point based on temperature and humidity%
+//
+// Calculates dew point based on temperature and humidity%
+//
+// See good information source for dew point: https://en.wikipedia.org/wiki/Dew_point
+// A well-known approximation formula is used to calculate the dew point. Formula can be found from mentioned wikipedia page.
+//
+// Below text is taken from https://en.wikipedia.org/wiki/Dew_point
+//
+//There are several different constant sets in use. The ones used in NOAA's presentation[15] are taken from a 1980 paper by David Bolton in the Monthly Weather Review:[16]
+//    a = 6.112 mbar, b = 17.67, c = 243.5 °C.
+//These valuations provide a maximum error of 0.1%, for −30 °C ≤ T ≤ 35°C and 1% < RH < 100%. Also noteworthy is the Sonntag1990,[17]
+//    a = 6.112 mbar, b = 17.62, c = 243.12 °C; for −45 °C ≤ T ≤ 60 °C (error ±0.35 °C).
+//Another common set of values originates from the 1974 Psychrometry and Psychrometric Charts, as presented by Paroscientific,[18]
+//    a = 6.105 mbar, b = 17.27, c = 237.7 °C; for 0 °C ≤ T ≤ 60 °C (error ±0.4 °C).
 func calculateDewPoint(temp float64, humidity float64) float64 {
 
-    tTemp := ((17.27 * temp) / (237.7 + temp)) + math.Log(humidity/100)
+    //Change on 20220806: b and c value have been changed from b=17.27, c=237.7
+    //to work better with below zero temperatures
+    b := 17.62
+    c := 243.12 
+    tTemp := ((b * temp) / (c + temp)) + math.Log(humidity/100)
     tDewpoint := 0.0
-    if tTemp != 17.27 {
-        tDewpoint = (237.7 * tTemp) / (17.27 - tTemp)
+    if tTemp != b {
+        tDewpoint = (c * tTemp) / (b - tTemp)
     } else {
         log.Printf("INFO: In tDewpoint: Dividing by zero. Adding 0.01 to temperature.\n")
-        tDewpoint = (237.7 * (tTemp + 0.01)) / (17.27 - tTemp + 0.01)
+        tDewpoint = (c * (tTemp + 0.01)) / (b - tTemp + 0.01)
     }
     return tDewpoint
 }
