@@ -24,14 +24,14 @@ func TestAbsHumidity(t *testing.T){
 
     //Test with -10C, 99% Humidity
     got = math.Round(calculateAbsHumidity(float64(-10), float64(99)) *100) / 100
-    want = 2.33
+    want = 2.34
     if got != want {
         t.Errorf("T=-10C H=99: got %f, wanted %f", got, want)
     }
 
     //Test with 40C, 95% Humidity
     got = math.Round(calculateAbsHumidity(float64(40), float64(95)) *10) / 10
-    want = 48.5
+    want = 48.6
     if got != want {
         t.Errorf("T=40 H=95: got %f, wanted %f", got, want)
     }

@@ -217,14 +217,31 @@ func checkNAN(sensorData SensorData) SensorData {
 }
 
 //Calculates absolutely humidity based on temperature and humidity%
+//
+//temp    : Temperature needs to be given in °C
+//humidity: Humidity is humidity percent
 func calculateAbsHumidity(temp float64, humidity float64) float64 {
-    steamSaturationPressure := 6.1078 * math.Pow(10, (7.5*temp/(temp+237.3)))
-    absHumidity := (216.679 * (humidity * steamSaturationPressure) / 100) / (temp + 273.15)
+    //Change Temperature to Kelvin
+    tempInK := temp + 273.16
+
+    //Calculates steam saturation pressure using Bolton (1980) formula
+    //source for the formula: http://meteorologia.uib.eu/ROMU/formal/relative_humidity/relative_humidity.pdf
+    //See from the link the precion for the formula. Result is not exact correct value 
+    steamSaturationPressure :=6.112 * math.Pow(math.E, ( (17.67*temp) / (temp + 243.5) ))
+
+    //absolutely humidity is calculated using formula found:
+    //https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/ 
+    absHumidity := (humidity * steamSaturationPressure* 18.02 ) / (tempInK * 100* 0.08314)
     return absHumidity
 }
 
+
+
 //
 // Calculates dew point based on temperature and humidity%
+//
+//temp    : Temperature needs to be given in °C
+//humidity: Humidity is humidity percent
 //
 // See good information source for dew point: https://en.wikipedia.org/wiki/Dew_point
 // A well-known approximation formula is used to calculate the dew point. Formula can be found from mentioned wikipedia page.
