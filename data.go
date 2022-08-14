@@ -126,7 +126,7 @@ func parseSensorFormat5(data []byte) (error, SensorData)  {
 
 }
 
-//Check if RuuviTag returns error value (Not a Number - NAN) 
+//Check if RuuviTag returns error value (Not a Number - NAN)
 func checkNAN(sensorData SensorData) SensorData {
     //Error values (NAN)
     TempNAN := -163.84
@@ -216,10 +216,18 @@ func checkNAN(sensorData SensorData) SensorData {
     return sensorData
 }
 
-//Calculates absolutely humidity based on temperature and humidity%
+//
+//Calculates absolutely humidity approximation based on temperature and humidity%
 //
 //temp    : Temperature needs to be given in °C
-//humidity: Humidity is humidity percent
+//humidity: Humidity is humidity in percent (0-100)
+//
+// return value: Approximation of absolute Humidity (g/m3)
+//
+//Abolutely humidity is calculated using Bolton formula for steam saturated pressure
+//Note! Returned value is approximation and has error. See links for detail for error.
+// Also measurements has error which are effecting to result of approximation of absolutely humidity 
+//
 func calculateAbsHumidity(temp float64, humidity float64) float64 {
     //Change Temperature to Kelvin
     tempInK := temp + 273.16
@@ -231,29 +239,28 @@ func calculateAbsHumidity(temp float64, humidity float64) float64 {
 
     //absolutely humidity is calculated using formula found:
     //https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/ 
-    absHumidity := (humidity * steamSaturationPressure* 18.02 ) / (tempInK * 100* 0.08314)
+    absHumidity := (humidity * steamSaturationPressure* 18.02 ) / (tempInK * 100 * 0.08314)
     return absHumidity
 }
 
-
-
 //
-// Calculates dew point based on temperature and humidity%
+// Calculates approximation of dew point based on temperature and humidity%
 //
 //temp    : Temperature needs to be given in °C
 //humidity: Humidity is humidity percent
+//
+//return value: Approximation of dew point in °C
+//
 //
 // See good information source for dew point: https://en.wikipedia.org/wiki/Dew_point
 // A well-known approximation formula is used to calculate the dew point. Formula can be found from mentioned wikipedia page.
 //
 // Below text is taken from https://en.wikipedia.org/wiki/Dew_point
 //
-//There are several different constant sets in use. The ones used in NOAA's presentation[15] are taken from a 1980 paper by David Bolton in the Monthly Weather Review:[16]
-//    a = 6.112 mbar, b = 17.67, c = 243.5 °C.
 //These valuations provide a maximum error of 0.1%, for −30 °C ≤ T ≤ 35°C and 1% < RH < 100%. Also noteworthy is the Sonntag1990,[17]
 //    a = 6.112 mbar, b = 17.62, c = 243.12 °C; for −45 °C ≤ T ≤ 60 °C (error ±0.35 °C).
-//Another common set of values originates from the 1974 Psychrometry and Psychrometric Charts, as presented by Paroscientific,[18]
-//    a = 6.105 mbar, b = 17.27, c = 237.7 °C; for 0 °C ≤ T ≤ 60 °C (error ±0.4 °C).
+//Please note! Temperature and humidity has error in measurements so the total error for dew point is higher than mentioned above
+//
 func calculateDewPoint(temp float64, humidity float64) float64 {
 
     //Change on 20220806: b and c value have been changed from b=17.27, c=237.7

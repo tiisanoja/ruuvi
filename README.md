@@ -7,14 +7,18 @@ Following values are stored to database. Stored values are mainly taken message 
 * Temperature (°C)
 * Pressure (hPa)
 * Humidity (%)
-* Absolutely humidity (g/m2) **`Calculated`** See Note 1.
+* Absolutely humidity (g/m3) **`Calculated`** See Note 1.
 * Dew point (°C) **`Calculated`** See Note 2.
 
-Note 1: http://www.finwx.net/forum/index.php?topic=390.0
+Note 1: Absolutely humidity approximation is calculated based on temperature and humidity%
+ Absolutely humidity is calculated using Bolton formula for steam saturated pressure
+ Note! Returned value is approximation and has error. See links for detail for error.
+ Also measurements has error which are effecting to result of approximation of absolutely humidity
+
 
 Note 2: Dew point is calculated using formula found in https://en.wikipedia.org/wiki/Dew_point. A well-known approximation formula is used to calculate the dew point. Formula can be found below "Calculating the dew point".
 b and c values used in the formula are:  b = 17.62, c = 243.12°C
-Result is approximation. Amount of error is unclear because it is at least mixture of usage well-known approximation formula and these b and c values has some error depending on the measured temperature. More details can be found from: https://en.wikipedia.org/wiki/Dew_point
+Result is approximation. Amount of error is depending on at least mixture of error in usage well-known approximation formula and these b and c values has some error and the measured temperature and humidity has error. More details can be found from: https://en.wikipedia.org/wiki/Dew_point
 
 
 ### Movement
