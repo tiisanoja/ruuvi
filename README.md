@@ -7,20 +7,16 @@ Following values are stored to database. Stored values are mainly taken message 
 * Temperature (°C)
 * Pressure (hPa)
 * Humidity (%)
-* Absolutely humidity (g/m3) **`Calculated`** See Note 1.
-* Dew point (°C) **`Calculated`** See Note 2.
+* Absolutely humidity (g/m3) **`Calculated`** (**\***)
+* Dew point (°C) **`Calculated`** (**\*\***)
 
-Note 1: Absolutely humidity approximation is calculated based on temperature and humidity%
- Absolutely humidity is calculated using Bolton formula for steam saturated pressure
- https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/
- Note! Returned value is approximation and has error. See links for detail for error.
- Also measurements has error which are effecting to result of approximation of absolutely humidity
+(**\***) Absolutely humidity approximation is calculated based on temperature and humidity%.
+Absolutely humidity is calculated using Bolton formula for steam saturated pressure. Formula can be found [here](https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/).
+***Note!*** Returned value is approximation and has error. See links for detail for error. Also measurements has error which are effecting to result of approximation of absolutely humidity
  
-
-Note 2: Dew point is calculated using formula found in https://en.wikipedia.org/wiki/Dew_point. A well-known approximation formula is used to calculate the dew point. Formula can be found below "Calculating the dew point".
+(**\*\***) Dew point is calculated using a well-known approximation formula found in [Wikipedia](https://en.wikipedia.org/wiki/Dew_point). Formula can be found below "Calculating the dew point".
 b and c values used in the formula are:  b = 17.62, c = 243.12°C
-Result is approximation. Amount of error is depending on at least mixture of error in usage well-known approximation formula and these b and c values has some error and the measured temperature and humidity has error. More details can be found from: https://en.wikipedia.org/wiki/Dew_point
-
+***Note!*** Result is approximation. Amount of error is depending on at least mixture of error in usage well-known approximation formula and these b and c values has some error and the measured temperature and humidity has error. More details can be found from [here](https://en.wikipedia.org/wiki/Dew_point)
 
 ### Movement
 * Acceleration (x,y,z) (mG)
@@ -59,5 +55,4 @@ Error log is generated to /var/log/ruuvi directory. It will use starting day as 
 
 ## DB
 
-Data is stored to InfluxDB. Supported version are 1.8 and 2.x. Application stores data to bucket which is configured in config.yml. Default bucket is *weather*. Used presission to store measurements is a second.
-
+Data is stored to InfluxDB. Supported version by used client are 1.8 and 2.x. Application stores data to bucket which is configured in config.yml. Default bucket is *weather*. Used presission to store measurements is a second. Application has been tested against InfluxDB 1.8 but now on only InfluxxDB 2.X will be verified. InfluxDB 1.8 should work as long as used client supports 1.8.
