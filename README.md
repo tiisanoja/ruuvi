@@ -1,14 +1,22 @@
 # Ruuvi
 Project provides application to store RuuviTag measurements to InfluxDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
 
-Following values are stored to database. Stored values are mainly taken from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
+Following values are stored to database. Stored values are mainly taken message sent from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
 
 ### Weather
 * Temperature (°C)
 * Pressure (hPa)
 * Humidity (%)
-* Absolutely humidity (g/m2) **`Calculated`**
-* Dew point (°C) **`Calculated`**
+* Absolutely humidity (g/m3) **`Calculated`** (**\***)
+* Dew point (°C) **`Calculated`** (**\*\***)
+
+(**\***) Absolutely humidity approximation is calculated based on temperature and humidity%.
+Absolutely humidity is calculated using Bolton formula for steam saturated pressure. Formula can be found [here](https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/).
+***Note!*** Returned value is approximation and has error. See links for detail for error. Also measurements has error which are effecting to result of approximation of absolutely humidity
+ 
+(**\*\***) Dew point is calculated using a well-known approximation formula found in [Wikipedia](https://en.wikipedia.org/wiki/Dew_point). Formula can be found below "Calculating the dew point".
+b and c values used in the formula are:  b = 17.62, c = 243.12°C
+***Note!*** Result is approximation. Amount of error is depending on at least mixture of error in usage well-known approximation formula and these b and c values has some error and the measured temperature and humidity has error. More details can be found from [here](https://en.wikipedia.org/wiki/Dew_point)
 
 ### Movement
 * Acceleration (x,y,z) (mG)
@@ -17,16 +25,16 @@ Following values are stored to database. Stored values are mainly taken from sen
 * Battery voltage (mV)
 * Transmit power (dBm)
 
-Application listen only [RAWv2](https://docs.ruuvi.com/communication/bluetooth-advertisements/data-format-5-rawv2) format. Really old versions of RuuviTag might have still Data Format 3 which is not supported. There is also Data Format 8 which is encrypted version of data format. That is not supported right now. 
+Application listen only [RAWv2](https://docs.ruuvi.com/communication/bluetooth-advertisements/data-format-5-rawv2) format. Really old versions of RuuviTag might have still Data Format 3 which is not supported. There is also Data Format 8 which is encrypted version of data format. That is not supported right now.
 
 ## Building
 
-Building requires module support from golang. Building has been tested to work fine with golang version 1.15 and 1.18. Building requires that you have installed make and golang. You might need to change Makefile to specify where go binary can be found.
+Building requires module support from golang. Building requires at least golang version 1.17. Building requires that you have installed make and golang. You might need to change Makefile to specify where go binary can be found.
 
 Building:
-1. make 
+1. make
 
-This will create ruuvi binary to directory ../../bin.
+This will first run unit tests and then create ruuvi binary to directory ../../bin. If unit tests are not passed, binary is not created.
 
 
 ## Running
@@ -47,5 +55,4 @@ Error log is generated to /var/log/ruuvi directory. It will use starting day as 
 
 ## DB
 
-Data is stored to InfluxDB. Supported version are 1.8 and 2.x. Application stores data to bucket which is configured in config.yml. Default bucket is *weather*. Used presission to store measurements is a second.
-
+Data is stored to InfluxDB. Supported version by used client are 1.8 and 2.x. Application stores data to bucket which is configured in config.yml. Default bucket is *weather*. Used presission to store measurements is a second. Application has been tested against InfluxDB 1.8 but now on only InfluxxDB 2.X will be verified. InfluxDB 1.8 should work as long as used client supports 1.8.

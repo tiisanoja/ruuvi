@@ -4,7 +4,7 @@ import (
     "log"
     "time"
 
-    influxdb2 "github.com/influxdata/influxdb-client-go/v2"
+    influxdb2 "github.com/influxdata/influxdb-client-go"
 )
 
 const (

@@ -12,35 +12,35 @@ func TestAbsHumidity(t *testing.T){
     got = math.Round(calculateAbsHumidity(float64(20), float64(100)) *100) / 100
     want = 17.28
     if got != want {
-        t.Errorf("got %f, wanted %f", got, want)
+        t.Errorf("T=20C H=100: got %f, wanted %f", got, want)
     }
 
     //Test with -14C, 25% Humidity
     got = math.Round(calculateAbsHumidity(float64(-14), float64(25)) *100) / 100
     want = 0.43
     if got != want {
-        t.Errorf("got %f, wanted %f", got, want)
+        t.Errorf("T=-14 H=25: got %f, wanted %f", got, want)
     }
 
     //Test with -10C, 99% Humidity
     got = math.Round(calculateAbsHumidity(float64(-10), float64(99)) *100) / 100
-    want = 2.33
+    want = 2.34
     if got != want {
-        t.Errorf("got %f, wanted %f", got, want)
+        t.Errorf("T=-10C H=99: got %f, wanted %f", got, want)
     }
 
     //Test with 40C, 95% Humidity
     got = math.Round(calculateAbsHumidity(float64(40), float64(95)) *10) / 10
-    want = 48.5
+    want = 48.6
     if got != want {
-        t.Errorf("got %f, wanted %f", got, want)
+        t.Errorf("T=40 H=95: got %f, wanted %f", got, want)
     }
 
     //Test with 30C, 19% Humidity
     got = math.Round(calculateAbsHumidity(float64(30), float64(19)) *10) / 10
     want = 5.8
     if got != want {
-        t.Errorf("got %f, wanted %f", got, want)
+        t.Errorf("T=30C H=19: got %f, wanted %f", got, want)
     }
 
 
@@ -48,7 +48,7 @@ func TestAbsHumidity(t *testing.T){
     got = math.Round(calculateAbsHumidity(float64(-40), float64(70)) *100) / 100
     want = 0.12
     if got != want {
-        t.Errorf("got %f, wanted %f", got, want)
+        t.Errorf("T=-40C H=70: got %f, wanted %f", got, want)
     }
 
 }
@@ -78,7 +78,7 @@ func TestDewPoint(t *testing.T){
 
     //Rounded values taken from calculator.net
     got = math.Round(calculateDewPoint(float64(-35), float64(20)) * 10) / 10
-    want = -49.9
+    want = -50.1
 
     if got != want {
         t.Errorf("Testing dew point: got %f, wanted %f", got, want)
