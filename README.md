@@ -53,6 +53,10 @@ Config.yml needs to be in the same directory with binary.
 
 Error log is generated to /var/log/ruuvi directory. It will use starting day as part of the log file name (ruuvi.<date in form of YYYYMMDD>.log). Logs do not rollover execpt if you start application daily.
 
-## DB
+## Database
 
 Data is stored to InfluxDB. Supported version by used client are 1.8 and 2.x. Application stores data to bucket which is configured in config.yml. Default bucket is *weather*. Used presission to store measurements is a second. Application has been tested against InfluxDB 1.8 but now on only InfluxxDB 2.X will be verified. InfluxDB 1.8 should work as long as used client supports 1.8.
+
+ ## Grafana
+ 
+ Grafana can be used to present measurements from database. It has good support for InfluxDB. See more from [here](https://grafana.com/oss/grafana/).
