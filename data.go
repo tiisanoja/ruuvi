@@ -228,6 +228,8 @@ func checkNAN(sensorData SensorData) SensorData {
 //Note! Returned value is approximation and has error. See links for detail for error.
 // Also measurements has error which are effecting to result of approximation of absolutely humidity 
 //
+//Calculated absolutely humidity is WITHOUT ANY WARRANTY!
+//
 func calculateAbsHumidity(temp float64, humidity float64) float64 {
     //Change Temperature to Kelvin
     tempInK := temp + 273.16
@@ -260,6 +262,8 @@ func calculateAbsHumidity(temp float64, humidity float64) float64 {
 //These valuations provide a maximum error of 0.1%, for −30 °C ≤ T ≤ 35°C and 1% < RH < 100%. Also noteworthy is the Sonntag1990,[17]
 //    a = 6.112 mbar, b = 17.62, c = 243.12 °C; for −45 °C ≤ T ≤ 60 °C (error ±0.35 °C).
 //Please note! Temperature and humidity has error in measurements so the total error for dew point is higher than mentioned above
+//
+// Calculated dew point is WITHOUT ANY WARRANTY!
 //
 func calculateDewPoint(temp float64, humidity float64) float64 {
 

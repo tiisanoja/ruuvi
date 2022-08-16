@@ -1,5 +1,5 @@
-go = /usr/lib/go-1.18/bin/go
-#go = go
+#go = /usr/lib/go-1.19/bin/go
+go = go
 
 all: test build
 
