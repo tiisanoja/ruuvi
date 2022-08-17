@@ -7,7 +7,7 @@ Following values are stored to database. Stored values are mainly taken message 
 * Temperature (°C)
 * Pressure (hPa)
 * Humidity (%)
-* Absolutely humidity (g/m3) **`Calculated`** (**\***)
+* Absolutely humidity (g/m³) **`Calculated`** (**\***)
 * Dew point (°C) **`Calculated`** (**\*\***)
 
 (**\***) Absolutely humidity approximation is calculated based on temperature and humidity%.
