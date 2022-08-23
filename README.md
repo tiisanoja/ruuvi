@@ -12,11 +12,11 @@ Following values are stored to database. Stored values are mainly taken message 
 
 (**\***) Absolutely humidity approximation is calculated based on temperature and humidity%.
 Absolutely humidity is calculated using Bolton formula for steam saturated pressure. Formula can be found [here](https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/).
-***Note!*** Returned value is approximation and has error. See links for detail for error. Also measurements has error which are effecting to result of approximation of absolutely humidity
+***Note!*** Returned value is approximation and has error. See links for detail for error. Also measurements has error which are effecting to result of approximation of absolutely humidity. This calculated value is WITHOUT ANY WARRANTY!
  
 (**\*\***) Dew point is calculated using a well-known approximation formula found in [Wikipedia](https://en.wikipedia.org/wiki/Dew_point). Formula can be found below "Calculating the dew point".
 b and c values used in the formula are:  b = 17.62, c = 243.12°C
-***Note!*** Result is approximation. Amount of error is depending on at least mixture of error in usage well-known approximation formula and these b and c values has some error and the measured temperature and humidity has error. More details can be found from [here](https://en.wikipedia.org/wiki/Dew_point)
+***Note!*** Result is approximation. Amount of error is depending on at least mixture of error in usage well-known approximation formula and these b and c values has some error and the measured temperature and humidity has error. More details can be found from [here](https://en.wikipedia.org/wiki/Dew_point) This calculated value is WITHOUT ANY WARRANTY!
 
 ### Movement
 * Acceleration (x,y,z) (mG)
@@ -34,7 +34,7 @@ Building requires module support from golang. Building requires at least golang 
 Building:
 1. make
 
-This will first run unit tests and then create ruuvi binary to directory ../../bin. If unit tests are not passed, binary is not created.
+This will first run unit tests and then create ruuvi binary to directory ../../bin. If unit tests are not passed, binary is not created. Check Makefile and change it so that go -compiler can be found.
 
 
 ## Running
@@ -57,6 +57,6 @@ Error log is generated to /var/log/ruuvi directory. It will use starting day as 
 
 Data is stored to InfluxDB. Supported version by used client are 1.8 and 2.x. Application stores data to bucket which is configured in config.yml. Default bucket is *weather*. Used presission to store measurements is a second. Application has been tested against InfluxDB 1.8 but now on only InfluxxDB 2.X will be verified. InfluxDB 1.8 should work as long as used client supports 1.8.
 
- ## Grafana
+## Grafana
  
- Grafana can be used to present measurements from database. It has good support for InfluxDB. See more from [here](https://grafana.com/oss/grafana/).
+Grafana can be used to present measurements from database. It has good support for InfluxDB. See more from [here](https://grafana.com/oss/grafana/).
