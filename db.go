@@ -22,7 +22,7 @@ func StoreMeasurement(sensorData SensorData) {
 
     //Sometimes Humidity is reported incorrectly
     //Let's not store it if it is way too high number
-    if sensorData.Humidity < 150.0 && sensorData.ValidData.Humidity == true {
+    if sensorData.ValidData.Humidity == true {
         measurement["Humidity"] = sensorData.Humidity
     }
 
