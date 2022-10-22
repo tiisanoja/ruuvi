@@ -1,3 +1,4 @@
+#Golang 1.17 or later is required
 #go = /usr/lib/go-1.19/bin/go
 go = go
 
