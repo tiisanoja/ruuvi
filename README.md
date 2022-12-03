@@ -12,11 +12,11 @@ Following values are stored to database. Stored values are mainly taken message 
 
 (**\***) Absolutely humidity approximation is calculated based on temperature and humidity%.
 Absolutely humidity is calculated using Bolton formula for steam saturated pressure. Formula can be found [here](https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/).
-***Note!*** Returned value is approximation. See links for detail for error. Also measurements has error which are effecting to result of approximation of absolutely humidity. This calculated value is WITHOUT ANY WARRANTY!
+***Note!*** Returned value is approximation. See links for detail for error. Also measurements has error which are effecting to result of approximation of absolutely humidity. This calculated value is without any warranty!
  
 (**\*\***) Dew point is calculated using a well-known approximation formula found in [Wikipedia](https://en.wikipedia.org/wiki/Dew_point). Formula can be found below "Calculating the dew point".
 b and c values used in the formula are:  b = 17.62, c = 243.12°C
-***Note!*** Result is approximation. Amount of error is depending on at least mixture of error in usage well-known approximation formula and these b and c values has some error and the measured temperature and humidity has error. More details can be found from [here](https://en.wikipedia.org/wiki/Dew_point) This calculated value is WITHOUT ANY WARRANTY!
+***Note!*** Result is approximation. See links for detail for error. Also measurements has error which are effecting to result of approximation of dew point. More details can be found from [here](https://en.wikipedia.org/wiki/Dew_point) This calculated value is without any warranty!
 
 ### Movement
 * Acceleration (x,y,z) (mG)
