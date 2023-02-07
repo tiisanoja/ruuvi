@@ -55,7 +55,7 @@ Error log is generated to /var/log/ruuvi directory. It will use starting day as 
 
 ## Database
 
-Data is stored to InfluxDB. Supported version by used client are 1.8 and 2.x. Application stores data to bucket, which is configured in config.yml. Default bucket is *weather*. Used presission in a databse to store measurements is a second. Application has been tested against InfluxDB 1.8 but now on only InfluxxDB 2.X will be verified. InfluxDB 1.8 should work as long as used client supports 1.8.
+Data is stored to InfluxDB. Supported version by used client are 1.8 and 2.x. Application stores data to bucket, which is configured in config.yml. Default bucket is *weather*. Used presission in a databse to store measurements is a second. Application has been tested against InfluxDB 1.8 but now on only InfluxDB 2.X will be verified. InfluxDB 1.8 should work as long as used client supports 1.8.
 
 ## Grafana
  
