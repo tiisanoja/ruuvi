@@ -9,6 +9,7 @@ Following values are stored to database. Stored values are mainly taken message 
 * Humidity (%)
 * Absolutely humidity (g/m³) **`Calculated`** (**\***)
 * Dew point (°C) **`Calculated`** (**\*\***)
+* Wet Bulb Temperature (°C) **`Calculated`** (Development on going)
 
 (**\***) Absolutely humidity approximation is calculated based on temperature and humidity%.
 Absolutely humidity is calculated using Bolton formula for steam saturated pressure. Formula can be found [here](https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/).
