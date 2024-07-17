@@ -50,6 +50,7 @@ type SensorData struct {
 	//Absolutely Humidity
 	AbsHumidity float64
 	DewPoint    float64
+	SSI         float64
 
 	//Struct to mark if read data is invalid
 	ValidData ValidDataDef
@@ -118,6 +119,7 @@ func parseSensorFormat5(data []byte) (error, SensorData) {
 	//Calculate values
 	sensorData.AbsHumidity = calculateAbsHumidity(sensorData.Temp, sensorData.Humidity)
 	sensorData.DewPoint = calculateDewPoint(sensorData.Temp, sensorData.Humidity)
+	sensorData.SSI = calculateSSI(sensorData.Temp, sensorData.Humidity)
 
 	sensorData = checkNAN(sensorData)
 
@@ -283,13 +285,15 @@ func calculateDewPoint(temp float64, humidity float64) float64 {
 // SSI is heat index used in Finland by FMI.
 // Formula is taken from https://github.com/fmidev/smartmet-library-newbase/blob/master/newbase/NFmiMetMath.cpp#L418
 func calculateSSI(temp float64, humidity float64) float64 {
+
+	// SSI is calculated only to temperatures over 14.5C
 	if temp < 14.5 {
 		return temp
 	}
 
-	// When in Finland it is > 14.5 degrees, 60% is approximately
-	// the minimum mean monthly humidity. However, Google wisdom
-	// claims most humans feel most comfortable either at 45%, or
+	// When it is > 14.5 degrees in Finland, 60% is approximately
+	// the minimum mean monthly humidity. However, it seems that
+	// most humans feel most comfortable either at 45%, or
 	// alternatively somewhere between 50-60%. Hence we choose
 	// the middle ground 50%
 	// Source: https://github.com/fmidev/smartmet-library-newbase/blob/master/newbase/NFmiMetMath.cpp#L418
