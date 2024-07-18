@@ -51,6 +51,7 @@ type SensorData struct {
 	AbsHumidity float64
 	DewPoint    float64
 	SSI         float64
+	Humidex     float64
 
 	//Struct to mark if read data is invalid
 	ValidData ValidDataDef
@@ -120,6 +121,7 @@ func parseSensorFormat5(data []byte) (error, SensorData) {
 	sensorData.AbsHumidity = calculateAbsHumidity(sensorData.Temp, sensorData.Humidity)
 	sensorData.DewPoint = calculateDewPoint(sensorData.Temp, sensorData.Humidity)
 	sensorData.SSI = calculateSSI(sensorData.Temp, sensorData.Humidity)
+	sensorData.Humidex = calculateHumidex(sensorData.Temp, sensorData.DewPoint)
 
 	sensorData = checkNAN(sensorData)
 
@@ -303,6 +305,22 @@ func calculateSSI(temp float64, humidity float64) float64 {
 
 	ssi := (1.8*temp - 0.55*(1-rh)*(1.8*temp-26) - 0.55*(1-rhRef)*26) / (1.8 * (1 - 0.55*(1-rhRef)))
 	return ssi
+}
+
+//
+// Calculate Humidex
+//
+// https://en.wikipedia.org/wiki/Humidex
+//
+// The humidex (short for humidity index) is an index number used by Canadian meteorologists
+// to describe how hot the weather feels to the average person,
+// by combining the effect of heat and humidity.
+
+func calculateHumidex(temp float64, dewPoint float64) float64 {
+	a := (1 / 273.15) - (1 / (273.15 + dewPoint))
+	b := a * 5417.7530
+	humidex := temp + 0.5555*(6.11*math.Exp(b)-10)
+	return humidex
 }
 
 // Tries to lock RuuviTag sensor

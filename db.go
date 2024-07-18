@@ -35,6 +35,7 @@ func StoreMeasurement(sensorData SensorData) {
 		measurement["AbsoluteHumidity"] = sensorData.AbsHumidity
 		measurement["Dewpoint"] = sensorData.DewPoint
 		measurement["SSI"] = sensorData.SSI
+		measurement["Humidex"] = sensorData.Humidex
 	}
 
 	insert(measurement, sensorData.MAC)
