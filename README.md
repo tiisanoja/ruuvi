@@ -11,7 +11,7 @@ Following values are stored to database. Stored values are mainly taken message 
 * Dew point (°C) **`Calculated`** (**\*\***)
 * Humidex (°C) **`Calculated`**
 
-Humidex or jumidity index describes how hot the weather feels to the average person, by combining the effect of heat and humidity. Please see the table on the [Wikipedia](https://en.wikipedia.org/wiki/Humidex) 
+Humidex or humidity index describes how hot the weather feels to the average person, by combining the effect of heat and humidity. Please see the table on the [Wikipedia](https://en.wikipedia.org/wiki/Humidex) 
 
 (**\***) Absolutely humidity approximation is calculated based on temperature and humidity%.
 Absolutely humidity is calculated using Bolton formula for steam saturated pressure. Formula can be found [here](https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/comment-page-1/).
