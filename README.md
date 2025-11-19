@@ -1,6 +1,8 @@
 # Ruuvi
 Application stores RuuviTag measurements to InfluxDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
 
+**NOTE** There is **breaking database change**. InfluxDB is not anymore supported. See more details from the Database section.
+
 Following values are stored to database. Stored values are mainly taken message sent from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
 
 ### Weather
@@ -60,6 +62,7 @@ Database is changed from InfluxDB. OSS version of InfluxDB v 3.0 is supporting q
 Right now there are two options:
 * TimescaleDB which is Postgres based database
 * QuestDB
+  
 Requirement is thta database have to run on RPI4 so there needs to be Arm64 support.
 
 ## Grafana
