@@ -55,7 +55,12 @@ Error log is generated to /var/log/ruuvi directory. It will use starting day as 
 
 ## Database
 
-Data is stored to InfluxDB. Supported version by used client are 1.8 and 2.x. Application stores data to bucket, which is configured in config.yml. Default bucket is *weather*. Used presission in a databse to store measurements is a second. Application has been tested against InfluxDB 1.8 but now on only InfluxDB 2.X will be verified. InfluxDB 1.8 should work as long as used client supports 1.8.
+Database is changed from InfluxDB. OSS version of InfluxDB v 3.0 is supporting quering only 72h data. "InfluxDB 3 Core limits query time ranges to approximately 72 hours." It is not suitable to this project anymore. So it is time to find an other timeseries database.
+
+Right now there are two options:
+* TimescaleDB which is Postgres based database
+* QuestDB
+Requirement is thta database have to run on RPI4 so there needs to be Arm64 support.
 
 ## Grafana
  
