@@ -3,6 +3,9 @@
 #Create directory for the logs if it does not exists
 mkdir -p /var/log/ruuvi
 
+#start QuestDB container
+/usr/local/sbin/questdb.sh &
+
 sleep 15
 
 hciattach /dev/ttyAMA0 bcm43xx 921600

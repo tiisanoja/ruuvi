@@ -57,11 +57,8 @@ Error log is generated to /var/log/ruuvi directory. It will use starting day as 
 
 ## Database
 
-Database is changed from InfluxDB. OSS version of InfluxDB v 3.0 is supporting quering only 72h data. "InfluxDB 3 Core limits query time ranges to approximately 72 hours." It is not suitable to this project anymore. So it is time to find an other timeseries database.
+Database is changed from InfluxDB. OSS version of InfluxDB v 3.0 is supporting quering only 72h data. "InfluxDB 3 Core limits query time ranges to approximately 72 hours." It is not suitable to this project anymore. So it is time to find an other timeseries database. Project has started to use QuestDB. It supports InfluxDB API for data insertions.
 
-Right now there are two options:
-* TimescaleDB which is Postgres based database
-* QuestDB
   
 Requirement is thta database have to run on RPI4 so there needs to be Arm64 support.
 
