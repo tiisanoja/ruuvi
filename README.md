@@ -65,3 +65,31 @@ Requirement is thta database have to run on RPI4 so there needs to be Arm64 supp
 ## Grafana
  
 Grafana can be used to present measurements from database. It has good support for InfluxDB. See more from [here](https://grafana.com/oss/grafana/).
+
+
+# Change needed to be done to gatt library
+
+Seems that there is issue in gatt library. You need to change go/src/github.com/paypal/gatt/adv.go file.
+
+Around row 86 there is:
+```go
+	uuidList := func(u []UUID, d []byte, w int) []UUID {
+		for len(d) > 0 {
+			u = append(u, UUID{d[:w]})
+			d = d[w:]
+		}
+		return u
+	}
+```
+
+Change it to be: 
+```go
+	uuidList := func(u []UUID, d []byte, w int) []UUID {
+		for len(d) > 0 {
+			if len(d) < w { return u}
+			u = append(u, UUID{d[:w]})
+			d = d[w:]
+		}
+		return u
+	}
+```
