@@ -6,8 +6,10 @@ all: test build
 
 build:
 	$(go) build -o ../../bin/ruuvi
+	env GOARCH=arm64 $(go) build -o ../../bin/ruuvi.arm64
 clean:
 	rm ../../bin/ruuvi
+	rm ../../bin/ruuvi.arm64
 	rm ../../bin/config.yml
 env:
 	$(go) mod tidy
