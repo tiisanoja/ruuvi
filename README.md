@@ -57,7 +57,7 @@ Error log is generated to /var/log/ruuvi directory. It will use starting day as 
 
 ## Database
 
-Database is changed from InfluxDB. OSS version of InfluxDB v 3.0 is supporting quering only 72h data. "InfluxDB 3 Core limits query time ranges to approximately 72 hours." It is not suitable to this project anymore. So it is time to find an other timeseries database. Project has started to use QuestDB. It supports InfluxDB API for data insertions. Seems that DB work directly also with influxDB libraries.
+Database is changed from InfluxDB. OSS version of InfluxDB v 3.0 is supporting quering only 72h data. "InfluxDB 3 Core limits query time ranges to approximately 72 hours." It is not suitable to this project anymore. So it is time to find an other timeseries database. Project has started to use QuestDB. It supports InfluxDB API for data insertions. Seems that database works directly using InfluxDB libraries. Anyway migration to QuestDB driver is planned to do next.
 
 
 ## Grafana
@@ -67,7 +67,11 @@ Grafana can be used to present measurements from database. QuestDB provides db a
 
 # Change needed to be done to gatt library
 
+<<<<<<< HEAD
 Seems that there is issue in gatt library. It will cause runtime panic because of invalid handling of errorneus advertise data. You need to change go/src/github.com/paypal/gatt/adv.go file.
+=======
+Seems that there is issue in gatt library which makes the whole application to crash. To fix this you need to change go/src/github.com/paypal/gatt/adv.go file.
+>>>>>>> d444503 (Changes to database.)
 
 Around row 99 there is:
 ```go
