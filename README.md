@@ -69,27 +69,32 @@ Grafana can be used to present measurements from database. It has good support f
 
 # Change needed to be done to gatt library
 
-Seems that there is issue in gatt library. You need to change go/src/github.com/paypal/gatt/adv.go file.
+Seems that there is issue in gatt library. It will cause runtime panic because of invalid handling of errorneus advertise data. You need to change go/src/github.com/paypal/gatt/adv.go file.
 
-Around row 86 there is:
+Around row 99 there is:
 ```go
-	uuidList := func(u []UUID, d []byte, w int) []UUID {
-		for len(d) > 0 {
-			u = append(u, UUID{d[:w]})
-			d = d[w:]
+		if len(b) < 2 {
+			return errors.New("invalid advertise data")
 		}
-		return u
-	}
+		l, t := b[0], b[1]
+		if len(b) < int(1+l) {
+			return errors.New("invalid advertise data")
+		}
+		d := b[2 : 1+l]
 ```
 
-Change it to be: 
+Add check for the l variable. It has to be 1 or greater. So change it to be: 
 ```go
-	uuidList := func(u []UUID, d []byte, w int) []UUID {
-		for len(d) > 0 {
-			if len(d) < w { return u}
-			u = append(u, UUID{d[:w]})
-			d = d[w:]
+		if len(b) < 2 {
+			return errors.New("invalid advertise data")
 		}
-		return u
-	}
+		l, t := b[0], b[1]
+		if len(b) < int(1+l) {
+			return errors.New("invalid advertise data")
+		}
+		if l < 1 {
+		   return errors.New("Invalid advertise data")
+		}
+		d := b[2 : 1+l]
+
 ```
