@@ -67,11 +67,7 @@ Grafana can be used to present measurements from database. QuestDB provides db a
 
 # Change needed to be done to gatt library
 
-<<<<<<< HEAD
 Seems that there is issue in gatt library. It will cause runtime panic because of invalid handling of errorneus advertise data. You need to change go/src/github.com/paypal/gatt/adv.go file.
-=======
-Seems that there is issue in gatt library which makes the whole application to crash. To fix this you need to change go/src/github.com/paypal/gatt/adv.go file.
->>>>>>> d444503 (Changes to database.)
 
 Around row 99 there is:
 ```go
