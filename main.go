@@ -15,7 +15,7 @@ var scanMutex = sync.Mutex{}
 
 /*TODO: To be moved*/
 var PressureCorrection = 0
-var StoreDelay = 15 * time.Second
+var StoreDelay = 15
 var ConnectionString = ""
 var Address = "Home"
 var sensorAddresses []string
@@ -27,16 +27,21 @@ var DBBucket = ""
 var adapter = bluetooth.DefaultAdapter
 
 func scanHandler(adapter *bluetooth.Adapter, device bluetooth.ScanResult) {
-	data := device.ManufacturerData()
-	if len(data) < 1 {
+	/*
+		    data := device.ManufacturerData()
+			//Verify that there is data
+			if len(data) < 1 {
+				return
+			}
+			byteData := data[0].Data
+			ParseRuuviData(byteData)
+	*/
+
+	if len(device.ManufacturerData()) < 1 {
 		return
 	}
 
-	byteData := data[0].Data
-	msg := fmt.Sprintf("%s %d %s %s", device.Address.String(), device.RSSI, device.LocalName(), string(byteData))
-
-	//TODO: Handle data
-	log.Println(msg)
+	ParseRuuviData(device.ManufacturerData()[0].Data, device.ManufacturerData()[0].CompanyID)
 }
 
 func main() {
@@ -67,7 +72,7 @@ func main() {
 	PressureCorrection = viper.GetInt("Pressure.Correction")
 	ConnectionString = viper.GetString("Database.ConnectionString")
 	Address = viper.GetString("Address")
-	StoreDelay = time.Duration(viper.GetInt("Measurements.StoreDelay")) * time.Second
+	StoreDelay = viper.GetInt("Measurements.StoreDelay")
 	DBToken = viper.GetString("Database.Token")
 	DBOrg = viper.GetString("Database.Org")
 	DBBucket = viper.GetString("Database.Bucket")
