@@ -96,8 +96,8 @@ func insert(measurement map[string]interface{}, MAC string) {
 
 	bFound := false
 	// Create a point and add to batch
-	for i := 0; i != len(aSensors); i++ {
-		if MAC == aSensors[i] {
+	for i := 0; i != len(sensorAddresses); i++ {
+		if MAC == sensorAddresses[i] {
 			tags["Location"] = aLocations[i]
 			bFound = true
 		}
@@ -135,8 +135,8 @@ func insertHW(measurement map[string]interface{}, MAC string) {
 
 	bFound := false
 	// Create a point and add to batch
-	for i := 0; i != len(aSensors); i++ {
-		if MAC == aSensors[i] {
+	for i := 0; i != len(sensorAddresses); i++ {
+		if MAC == sensorAddresses[i] {
 			tags["Location"] = aLocations[i]
 			bFound = true
 		}
