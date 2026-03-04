@@ -1,7 +1,8 @@
 # Ruuvi
-Application stores RuuviTag measurements to InfluxDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
+Application stores RuuviTag measurements to QuestDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
 
-**NOTE** There is **breaking database change**. InfluxDB is not anymore supported. See more details from the Database section.
+**NOTE** InfluxDB is not anymore supported. See more details from the Database section.
+**NOTE** Bluetooth library has been changed because it was outdated and had stability issues.
 
 Following values are stored to database. Stored values are mainly taken message sent from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
 
@@ -64,34 +65,3 @@ Database is changed from InfluxDB. OSS version of InfluxDB v 3.0 is supporting q
  
 Grafana can be used to present measurements from database. QuestDB provides db access using postgres API. Graphana has free support for it. See more from [here](https://grafana.com/oss/grafana/).
 
-
-# Change needed to be done to gatt library
-
-Seems that there is issue in gatt library. It will cause runtime panic because of invalid handling of errorneus advertise data. You need to change go/src/github.com/paypal/gatt/adv.go file.
-
-Around row 99 there is:
-```go
-		if len(b) < 2 {
-			return errors.New("invalid advertise data")
-		}
-		l, t := b[0], b[1]
-		if len(b) < int(1+l) {
-			return errors.New("invalid advertise data")
-		}
-		d := b[2 : 1+l]
-```
-
-Add check for the l variable. It has to be 1 or greater. So change it to be: 
-```go
-		if len(b) < 2 {
-			return errors.New("invalid advertise data")
-		}
-		l, t := b[0], b[1]
-		if len(b) < int(1+l) {
-			return errors.New("invalid advertise data")
-		}
-		if l < 1 {
-		   return errors.New("Invalid advertise data")
-		}
-		d := b[2 : 1+l]
-```
