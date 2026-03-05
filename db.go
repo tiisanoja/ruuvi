@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"time"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go"
+	qdb "github.com/questdb/go-questdb-client/v4"
 )
 
 const (
@@ -51,7 +53,7 @@ func StoreMeasurement(sensorData SensorData) {
 		measurement["Dewpoint"] = sensorData.DewPoint
 	}
 
-	insert(measurement, sensorData.MAC)
+	insert(sensorData, sensorData.MAC)
 }
 
 func StoreHWmeasurement(sensorData SensorData) {
@@ -72,26 +74,53 @@ func StoreHWmeasurement(sensorData SensorData) {
 //
 //
 
+var ctx context.Context
+var client qdb.LineSender = nil
+
+// Databse connect
+func dbConnect() {
+	ctx = context.TODO()
+
+	var err error
+
+	log.Println("Opening Databse connection.")
+
+	//Creating Connection string
+	connectionString := "http::addr=" + "localhost:9000" + //ConnectionString +
+		";token=" + DBToken + ";auto_flush_interval=1000;"
+
+	client, err = qdb.LineSenderFromConf(ctx, connectionString)
+	if err != nil {
+		log.Panic("Failed to connect to database.")
+	}
+	log.Println("Database connection opened.")
+
+}
+
+func dbClose() {
+	if client == nil {
+		log.Println("WARNING: Database connection was already closed or not opened at all.")
+		return
+	}
+
+	err := client.Flush(ctx)
+	if err != nil {
+		log.Printf("ERROR: Database Flush failed: %s\n", err.Error())
+	}
+
+	err = client.Close(ctx)
+	if err != nil {
+		log.Printf("ERROR: Database Close failed: %s\n", err.Error())
+	}
+
+	client = nil
+}
+
 // Insert points to database
 // Uses: Measurement table
-func insert(measurement map[string]interface{}, MAC string) {
-	// Create client and set batch size to 2
-	c := influxdb2.NewClientWithOptions(ConnectionString, DBToken, influxdb2.DefaultOptions().SetBatchSize(2))
-	defer c.Close()
+// func insert(measurement map[string]interface{}, MAC string) {
+func insert(sensorData SensorData, MAC string) {
 
-	// user blocking write client for writes to desired bucket
-	writeAPI := c.WriteAPI(DBOrg, DBBucket)
-
-	// Get errors channel
-	errorsCh := writeAPI.Errors()
-	// Create go proc for reading and logging errors
-	go func() {
-		for err := range errorsCh {
-			log.Printf("DB Error: %s\n", err.Error())
-		}
-	}()
-
-	//
 	tags := map[string]string{"Address": Address}
 
 	bFound := false
@@ -111,13 +140,29 @@ func insert(measurement map[string]interface{}, MAC string) {
 	}
 
 	tags["Device"] = MAC
-	fields := measurement
 
-	pt := influxdb2.NewPoint("measurements", tags, fields, time.Now())
-	writeAPI.WritePoint(pt)
+	//Write measurement to database
+	err := client.Table("measurements").
+		Symbol("Address", tags["Address"]).
+		Symbol("Device", tags["Device"]).
+		Symbol("Location", tags["Location"]).
+		Float64Column("Temperature", sensorData.Temp).
+		Int64Column("Pressure", int64(sensorData.Pressure)).
+		Float64Column("Humidity", sensorData.Humidity).
+		Float64Column("Dewpoint", sensorData.DewPoint).
+		Float64Column("AbsoluteHumidity", sensorData.AbsHumidity).
+		AtNow(ctx)
 
-	// Force all unwritten data to be sent
-	writeAPI.Flush()
+	if err != nil {
+		log.Panicf("Failed to insert data to Database: %s\n", err.Error())
+	}
+
+	//Flush data
+	err = client.Flush(ctx)
+	if err != nil {
+		log.Panicf("Failed to flush data: %s\n", err.Error())
+	}
+
 }
 
 // Insert points to database

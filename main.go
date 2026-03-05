@@ -44,7 +44,7 @@ func scanHandler(adapter *bluetooth.Adapter, device bluetooth.ScanResult) {
 	ParseRuuviData(device.ManufacturerData()[0].Data, device.ManufacturerData()[0].CompanyID)
 }
 
-func main() {
+func initialize() {
 	// Set the file name of the configurations file
 	viper.SetConfigName("config")
 
@@ -76,10 +76,20 @@ func main() {
 	DBToken = viper.GetString("Database.Token")
 	DBOrg = viper.GetString("Database.Org")
 	DBBucket = viper.GetString("Database.Bucket")
+}
+
+func main() {
+
+	initialize()
 
 	log.Printf("Pressure correction: %d\n", viper.GetInt("Pressure.Correction"))
 	log.Printf("Database connection: %s\n", viper.GetString("Database.ConnectionString"))
 	log.Printf("Address: %s\n", viper.GetString("Address"))
+
+	//Open Database connection
+	log.Println("Opening Databse connection")
+	dbConnect()
+	defer dbClose()
 
 	log.Printf("Following Ruuvitags will be used:\n")
 
