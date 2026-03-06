@@ -1,7 +1,7 @@
 # Ruuvi
 Application stores RuuviTag measurements to QuestDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
 
-**NOTE** InfluxDB is not anymore supported. See more details from the Database section. InfluxDB might still work because QuestDB uses same API as InfluxDB.
+**NOTE** InfluxDB is not anymore supported. See more details from the Database section. InfluxDB might still work because QuestDB uses same API as InfluxDB.   
 **NOTE** Bluetooth library has been changed because it was outdated and had stability issues.
 
 Following values are stored to database. Stored values are mainly taken message sent from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.
@@ -42,11 +42,11 @@ This will first run unit tests and then create ruuvi binary to directory ../../b
 
 ## Running
 
-Before running the binary, setup config.yml. Provide database settings for InfluxDB. In config.yml there are examples for InfluxDB 1.8 and 2.x. Please note that those two versions are configured totally different way. You need also to give name for sensors and provide MAC addresses of RuuviTags. Only those sensors are stored to the database which MAC address is provided in config.yml. Each RuuviTag sensor is stored in 15s interval by default to save some disk space. True interval is bit more because RuuviTag is sending measurements between 1-3s depending on configuration and firmware installed to RuuviTag. In config.yml you can specify storing interval if something else than 15s is needed.
+Before running the binary, setup config.yml. Provide database settings for QuestDB. In config.yml there are examples for QuestDB. You need also to give name for sensors and provide MAC addresses of RuuviTags. Only those sensors are stored to the database. Each RuuviTag sensor measurements are stored in 15s interval by default to save some disk space. True interval is bit more because RuuviTag is sending measurements between 1-3s depending on configuration and firmware installed to RuuviTag. In config.yml you can specify storing interval if something else than 15s is needed.
 
-There is startRuuvi.sh which can be used at least on RaspberryPi to start application. It will trun green led on when application is runnig. You can comment that part from the script if you do not want that functionality.
+There is startRuuvi.sh shell script which can be used at least on RaspberryPi to start application. It will trun green led on when application is runnig. You can comment that part from the script if you do not want that functionality.
 
-Config.yml needs to be in the same directory with binary.
+Config.yml needs to be in the same directory with the ruuvi binary.
 
 ### Example
 1. mkdir -p /opt/ruuvi
@@ -58,7 +58,7 @@ Error log is generated to /var/log/ruuvi directory. It will use starting day as 
 
 ## Database
 
-Database is changed from InfluxDB. OSS version of InfluxDB v 3.0 is supporting quering only 72h data. "InfluxDB 3 Core limits query time ranges to approximately 72 hours." It is not suitable to this project anymore. So it is time to find an other timeseries database. Project has started to use QuestDB. It supports InfluxDB API for data insertions. Seems that database works directly using InfluxDB libraries. Anyway migration to QuestDB driver is planned to do next.
+Database was changed from InfluxDB to QuestDB. OSS version of InfluxDB v 3.0 is supporting quering only 72h data. "InfluxDB 3 Core limits query time ranges to approximately 72 hours." It is not suitable to this project anymore because history data is important part of this project. So it was time to find an other timeseries based database. Project started to use QuestDB. It supports InfluxDB API for data insertions. Seems that database works directly using InfluxDB libraries but migration to QuestDB drivers was done. 
 
 
 ## Grafana

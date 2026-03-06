@@ -1,9 +1,11 @@
 # QuestDB
 Supports InfluxDB (input) and PostgresDB (output) interfaces
 
-Downloadable from https://hub.docker.com/r/questdb/questdb
+it's downloadable from https://hub.docker.com/r/questdb/questdb
 
-## Staring database
+## Staring database in case of containers
+
+Example how to start database:
 $ docker run -p 9000:9000 -p 8812:8812 questdb/questdb
 
 Persist database:
