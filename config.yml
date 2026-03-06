@@ -44,24 +44,25 @@ Measurements:
 #
 
 #Common tag for all Ruuvitag sensors
-Address: "YourAddress"
+#Useful if you move and want to see measurements from one address
+Address: "StreetAddress"
 
 #List of Ruuvitag sensors to be stored to DB
 #If sensor is not on the list it won't be stored to DB
 #MAC addresses are without leading zeros!
 Sensors: 
-    - "aa:1e:7b:f3:yy:1"
+    - "aa:1e:7b:f3:yy:xx"
     - "bb:e3:18:33:yy:xx"
     - "cc:5a:86:8d:yy:xx"
 
 #Location tag for each Ruuvitag
 #Both MAC and Location tag can be used to separate each Ruuvitag sensors in DB
 
-"aa:e3:18:33:yy:1":
-  Location: "Outside"
+"aa:1e:7b:f3:yy:xx":
+  Location: "Balcony"
   
-"bb:1e:7b:f3:yy:xx":
+"bb:e3:18:33:yy:xx":
   Location: "Sauna"
 
 "cc:5a:86:8d:yy:xx":
-  Location: "Inside"
+  Location: "Livingroom"

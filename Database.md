@@ -1,5 +1,5 @@
 # QuestDB
-Supports InfluxDB and PostgresDB interfaces
+Supports InfluxDB (input) and PostgresDB (output) interfaces
 
 Downloadable from https://hub.docker.com/r/questdb/questdb
 
@@ -13,5 +13,5 @@ Replace local/dir with the absolute path to the directory on your host machine w
 
 This is the list of ports used by QuestDB:
 * 9000 for the InfluxDB Line Protocol, REST API and the Web Console (accessible at localhost:9000⁠)
-* 8812 for the Postgres wire protocol
+* 8812 for the Postgres wire protocol, Used to query the data
 

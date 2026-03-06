@@ -1,7 +1,7 @@
 # Ruuvi
 Application stores RuuviTag measurements to QuestDB. You can then use for example Graphana to view results from database. This application has been tested on RaspberryPi. So it should work at least there.
 
-**NOTE** InfluxDB is not anymore supported. See more details from the Database section.
+**NOTE** InfluxDB is not anymore supported. See more details from the Database section. InfluxDB might still work because QuestDB uses same API as InfluxDB.
 **NOTE** Bluetooth library has been changed because it was outdated and had stability issues.
 
 Following values are stored to database. Stored values are mainly taken message sent from sensor. There are few values which are calculated based on measuremants. Calculated values are marked with **`Calculated`** -tag.

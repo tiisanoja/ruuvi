@@ -6,13 +6,8 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"os"
 	"sync"
 	"time"
-)
-
-var (
-	httpURL = os.Getenv("HTTP_URL")
 )
 
 type ValidDataDef struct {
@@ -28,6 +23,24 @@ type ValidDataDef struct {
 	Seq           bool
 	TXPower       bool
 	MAC           bool
+}
+
+func (vdf *ValidDataDef) isValid() bool {
+
+	if vdf.Temp == false ||
+		vdf.Pressure == false ||
+		vdf.Battery == false ||
+		vdf.AccelerationX == false ||
+		vdf.AccelerationY == false ||
+		vdf.AccelerationZ == false ||
+		vdf.Seq == false ||
+		vdf.TXPower == false ||
+		vdf.MAC == false {
+
+		return false
+	}
+
+	return true
 }
 
 // SensorData to be posted
@@ -264,8 +277,6 @@ func calculateAbsHumidity(temp float64, humidity float64) float64 {
 // Calculated dew point is WITHOUT ANY WARRANTY!
 func calculateDewPoint(temp float64, humidity float64) float64 {
 
-	//Change on 20220806: b and c value have been changed from b=17.27, c=237.7
-	//to work better with below zero temperatures
 	b := 17.62
 	c := 243.12
 	tTemp := ((b * temp) / (c + temp)) + math.Log(humidity/100)
@@ -306,7 +317,7 @@ func ParseRuuviData(dataManufactor []byte, company uint16) {
 			log.Printf("Ruuvi data with sensor format %d\n", sensorFormat)
 			switch sensorFormat {
 			case 3:
-				log.Printf("RuuviTag version 3 not supported. Please upgrade RuuviTag to version 5.")
+				log.Printf("RuuviTag version 3 is deprecated. Please upgrade Firmware to version 5.")
 			case 5:
 				err, sensorData := parseSensorFormat5(data)
 				if err == nil {
@@ -323,11 +334,23 @@ func ParseRuuviData(dataManufactor []byte, company uint16) {
 						sensorData.TXPower,
 						sensorData.MAC)
 
+					//Verify if data is valid
+					if sensorData.ValidData.isValid() == false {
+						return
+					}
+
+					log.Println("Storing data to DB")
 					StoreMeasurement(sensorData)
 					StoreHWmeasurement(sensorData)
 				}
+			case 6:
+				log.Printf("Ruuvi Air is not supported.")
 			case 8:
 				log.Printf("RuuviTag version 8 is having encrypted data which is not supported.")
+			case 0xC5:
+				log.Printf("RuuviTag Cut data format is not supported.")
+			case 0xE1:
+				log.Printf("Ruuvi Air is not supported.")
 			default:
 				log.Printf("Unknown sensor format %d\n", sensorFormat)
 			}

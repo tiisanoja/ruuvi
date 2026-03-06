@@ -3,81 +3,50 @@ package main
 import (
 	"context"
 	"log"
-	"time"
 
-	influxdb2 "github.com/influxdata/influxdb-client-go"
 	qdb "github.com/questdb/go-questdb-client/v4"
 )
 
-const (
-	// Specifies name of bucket where data is stored
-	DBERROR = "DB Error: "
-)
-
+// Stores ruuvitag measurement related data
 func StoreMeasurement(sensorData SensorData) {
-	measurement := make(map[string]interface{})
 
-	//Store only valid values
-	if sensorData.ValidData.Temp == true {
-		measurement["Temperature"] = sensorData.Temp
-	}
-
-	//Sometimes Humidity is reported incorrectly
-	//Let's not store it if it is way too high number
-	if sensorData.ValidData.Humidity == true {
-		measurement["Humidity"] = sensorData.Humidity
-	}
-
-	//Store only valid values
-	if sensorData.ValidData.Pressure == true {
-		measurement["Pressure"] = int(sensorData.Pressure)
-	}
-
-	//Accelarations
-	if sensorData.ValidData.AccelerationX == true {
-		measurement["AccelerationX"] = int(sensorData.AccelerationX)
-	}
-	if sensorData.ValidData.AccelerationY == true {
-		measurement["AccelerationY"] = int(sensorData.AccelerationY)
-	}
-	if sensorData.ValidData.AccelerationZ == true {
-		measurement["AccelerationZ"] = int(sensorData.AccelerationZ)
-	}
-
-	//Calculated values
-	if sensorData.ValidData.Temp == true && sensorData.ValidData.Humidity == true {
-		measurement["AbsoluteHumidity"] = sensorData.AbsHumidity
-	}
-
-	if sensorData.ValidData.Temp == true && sensorData.ValidData.Humidity == true {
-		measurement["Dewpoint"] = sensorData.DewPoint
-	}
-
-	insert(sensorData, sensorData.MAC)
+	insert(sensorData)
 }
 
+// Stores ruuvitag Hardware related data
 func StoreHWmeasurement(sensorData SensorData) {
-	HWmeasurement := make(map[string]interface{})
 
-	if sensorData.ValidData.Battery == true {
-		HWmeasurement["Battery"] = int(sensorData.Battery)
-	}
-
-	if sensorData.ValidData.TXPower == true {
-		HWmeasurement["TxPower"] = int(sensorData.TXPower)
-	}
-
-	insertHW(HWmeasurement, sensorData.MAC)
+	insertHW(sensorData)
 }
 
-//
-//
-//
+// Create Tags to be given for each measurement
+// Tags to be added:
+// Address: Street Address for Ruuvitag. If used in multiple addresses. For example if you move you can use this to filter measurements
+// MAC: Ruuvitag's MAC address
+// Location: Location in the Adress. For example livingroom
+func createTags(sensorData SensorData) (map[string]string, bool) {
+	tags := map[string]string{"Address": Address}
 
+	bFound := false
+	//Add adress
+	for i := 0; i != len(sensorAddresses); i++ {
+		if sensorData.MAC == sensorAddresses[i] {
+			tags["Location"] = aLocations[i]
+			bFound = true
+		}
+	}
+
+	tags["Device"] = sensorData.MAC
+
+	return tags, bFound
+}
+
+// Context and client for QuestDB connection
 var ctx context.Context
 var client qdb.LineSender = nil
 
 // Databse connect
+// Open it only once
 func dbConnect() {
 	ctx = context.TODO()
 
@@ -97,6 +66,8 @@ func dbConnect() {
 
 }
 
+// Close the database connection
+// Close it only once
 func dbClose() {
 	if client == nil {
 		log.Println("WARNING: Database connection was already closed or not opened at all.")
@@ -116,30 +87,19 @@ func dbClose() {
 	client = nil
 }
 
-// Insert points to database
+// Insert measurement points to database
 // Uses: Measurement table
-// func insert(measurement map[string]interface{}, MAC string) {
-func insert(sensorData SensorData, MAC string) {
+func insert(sensorData SensorData) {
 
-	tags := map[string]string{"Address": Address}
-
-	bFound := false
-	// Create a point and add to batch
-	for i := 0; i != len(sensorAddresses); i++ {
-		if MAC == sensorAddresses[i] {
-			tags["Location"] = aLocations[i]
-			bFound = true
-		}
-	}
+	//Create tags/Symbols for each row
+	tags, bFound := createTags(sensorData)
 
 	/*Check if MAC was found from the list to be stored to DB*/
 	if bFound == false {
 		/*Not found. not storing*/
-		log.Printf("%s Ruuvitag is not listed in config.yml to be stored to database.\n", MAC)
+		log.Printf("%s Ruuvitag is not listed in config.yml to be stored to database.\n", sensorData.MAC)
 		return
 	}
-
-	tags["Device"] = MAC
 
 	//Write measurement to database
 	err := client.Table("measurements").
@@ -151,6 +111,9 @@ func insert(sensorData SensorData, MAC string) {
 		Float64Column("Humidity", sensorData.Humidity).
 		Float64Column("Dewpoint", sensorData.DewPoint).
 		Float64Column("AbsoluteHumidity", sensorData.AbsHumidity).
+		Int64Column("AccelerationX", int64(sensorData.AccelerationX)).
+		Int64Column("AccelerationY", int64(sensorData.AccelerationY)).
+		Int64Column("AccelerationZ", int64(sensorData.AccelerationZ)).
 		AtNow(ctx)
 
 	if err != nil {
@@ -165,42 +128,37 @@ func insert(sensorData SensorData, MAC string) {
 
 }
 
-// Insert points to database
+// Insert RuuviTag hardware related points to database
 // Uses Hardware table
-func insertHW(measurement map[string]interface{}, MAC string) {
-	// Create client and set batch size to 2
-	c := influxdb2.NewClientWithOptions(ConnectionString, DBToken, influxdb2.DefaultOptions().SetBatchSize(2))
-	defer c.Close()
+func insertHW(sensorData SensorData) {
 
-	// user blocking write client for writes to desired bucket
-	writeAPI := c.WriteAPI(DBOrg, DBBucket)
-
-	// Create a point and add to batch
-	tags := map[string]string{"Address": Address}
-
-	bFound := false
-	// Create a point and add to batch
-	for i := 0; i != len(sensorAddresses); i++ {
-		if MAC == sensorAddresses[i] {
-			tags["Location"] = aLocations[i]
-			bFound = true
-		}
-	}
+	//Create tags/Symbols for each row
+	tags, bFound := createTags(sensorData)
 
 	/*Check if MAC was found from the list to be stored to DB*/
 	if bFound == false {
 		/*Not found, not storing*/
-		log.Printf("%s Ruuvitag is not listed in config.yml to be stored to database.\n", MAC)
+		log.Printf("%s Ruuvitag is not listed in config.yml to be stored to database.\n", sensorData.MAC)
 		return
 	}
 
-	tags["Device"] = MAC
-	fields := measurement
+	//Write measurement to database
+	err := client.Table("HWmeasurements").
+		Symbol("Address", tags["Address"]).
+		Symbol("Device", tags["Device"]).
+		Symbol("Location", tags["Location"]).
+		Int64Column("Battery", int64(sensorData.Battery)).
+		Int64Column("TxPower", int64(sensorData.TXPower)).
+		AtNow(ctx)
 
-	pt := influxdb2.NewPoint("HWmeasurements", tags, fields, time.Now())
-	writeAPI.WritePoint(pt)
+	if err != nil {
+		log.Panicf("Failed to insert data to Database: %s\n", err.Error())
+	}
 
-	// Force all unwritten data to be sent
-	writeAPI.Flush()
+	//Flush data
+	err = client.Flush(ctx)
+	if err != nil {
+		log.Panicf("Failed to flush data: %s\n", err.Error())
+	}
 
 }

@@ -87,7 +87,6 @@ func main() {
 	log.Printf("Address: %s\n", viper.GetString("Address"))
 
 	//Open Database connection
-	log.Println("Opening Databse connection")
 	dbConnect()
 	defer dbClose()
 
