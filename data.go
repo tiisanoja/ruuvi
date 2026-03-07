@@ -336,21 +336,21 @@ func ParseRuuviData(dataManufactor []byte, company uint16) {
 
 					//Verify if data is valid
 					if sensorData.ValidData.isValid() == false {
+						log.Printf("ERROR: Measurement data is invalid. Not saving to Database.\n")
 						return
 					}
 
-					log.Println("Storing data to DB")
 					StoreMeasurement(sensorData)
 					StoreHWmeasurement(sensorData)
 				}
 			case 6:
-				log.Printf("Ruuvi Air is not supported.")
+				log.Printf("Ruuvi Air on Bluetooth 4 is not supported.")
 			case 8:
 				log.Printf("RuuviTag version 8 is having encrypted data which is not supported.")
 			case 0xC5:
 				log.Printf("RuuviTag Cut data format is not supported.")
 			case 0xE1:
-				log.Printf("Ruuvi Air is not supported.")
+				log.Printf("Ruuvi Air on Bluetooth 5 is not supported.")
 			default:
 				log.Printf("Unknown sensor format %d\n", sensorFormat)
 			}
