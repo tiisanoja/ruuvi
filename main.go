@@ -20,9 +20,6 @@ var ConnectionString = ""
 var Address = "Home"
 var sensorAddresses []string
 var aLocations []string
-var DBToken = ""
-var DBOrg = ""
-var DBBucket = ""
 
 var adapter = bluetooth.DefaultAdapter
 
@@ -62,20 +59,14 @@ func initialize() {
 
 	// Set undefined variables
 	viper.SetDefault("Pressure.Correction", 0)
-	viper.SetDefault("Database.ConnectionString", "http://localhost:8086")
+	viper.SetDefault("Database.ConnectionString", "http::addr=localhost:9000;")
 	viper.SetDefault("Address", "Home")
 	viper.SetDefault("Measurements.StoreDelay", 15)
-	viper.SetDefault("Database.Token", "")
-	viper.SetDefault("Database.Org", "")
-	viper.SetDefault("Database.Bucket", "weather")
 
 	PressureCorrection = viper.GetInt("Pressure.Correction")
 	ConnectionString = viper.GetString("Database.ConnectionString")
 	Address = viper.GetString("Address")
 	StoreDelay = viper.GetInt("Measurements.StoreDelay")
-	DBToken = viper.GetString("Database.Token")
-	DBOrg = viper.GetString("Database.Org")
-	DBBucket = viper.GetString("Database.Bucket")
 }
 
 func main() {
@@ -83,7 +74,7 @@ func main() {
 	initialize()
 
 	log.Printf("Pressure correction: %d\n", viper.GetInt("Pressure.Correction"))
-	log.Printf("Database connection: %s\n", viper.GetString("Database.ConnectionString"))
+	//log.Printf("Database connection: %s\n", viper.GetString("Database.ConnectionString"))
 	log.Printf("Address: %s\n", viper.GetString("Address"))
 
 	//Open Database connection

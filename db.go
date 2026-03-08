@@ -55,8 +55,7 @@ func dbConnect() {
 	log.Println("Opening Databse connection.")
 
 	//Creating Connection string
-	connectionString := "http::addr=" + "localhost:9000" + //ConnectionString +
-		";token=" + DBToken + ";auto_flush_interval=1000;"
+	connectionString := ConnectionString + "auto_flush_interval=1000;"
 
 	client, err = qdb.LineSenderFromConf(ctx, connectionString)
 	if err != nil {
