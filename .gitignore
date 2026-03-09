@@ -1,0 +1,3 @@
+#Ignore build binaries
+bin/ruuvi
+bin/ruuvi.arm64
