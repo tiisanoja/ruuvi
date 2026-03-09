@@ -3,14 +3,14 @@ go = go
 
 all: build
 
-build: test
-	$(go) build -o bin/ruuvi
-	env GOARCH=arm64 $(go) build -o bin/ruuvi.arm64
+build: test	
+	cd src; $(go) build -o ../bin/ruuvi
+	cd src; env GOARCH=arm64 $(go) build -o ../bin/ruuvi.arm64
 clean:
 	rm bin/ruuvi
 	rm bin/ruuvi.arm64
 env:
 	$(go) mod tidy
 test:
-	$(go) test
+	cd src; $(go) test
 
